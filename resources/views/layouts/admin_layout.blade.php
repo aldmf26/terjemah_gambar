@@ -6,7 +6,7 @@
     @php
         $title = isset($title) ? $title : "";
     @endphp
-    <title>{{ $title }} | E-PERPUSJAR</title>
+    <title>{{ $title }} | Terjemahan</title>
     <!-- Extra head e.g title -->
     @yield('head')
 </head>

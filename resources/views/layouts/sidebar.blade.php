@@ -2,8 +2,6 @@
     $auth = auth()->user();
     $superadmin = $auth->hasRole('superadmin');
     $admin = $auth->hasRole('admin');
-    $pengguna = $auth->hasRole('pengguna');
-    $kepala = $auth->hasRole('kepala');
 
     $sidebarNavs = [
         'Home',
@@ -14,51 +12,15 @@
         ],
     ];
 
-
-
-    if ($pengguna || $admin || $superadmin || $kepala) {
-        $sidebarNavs = array_merge($sidebarNavs, [
-            'Transaksi',
-            [
-                'name' => 'Peminjaman',
-                'link' => 'admin.loans.index',
-                'icon' => 'ti ti-arrows-exchange',
-            ],
-            [
-                'name' => 'Pengembalian',
-                'link' => 'admin.returns.index',
-                'icon' => 'ti ti-check',
-            ],
-            [
-                'name' => 'Denda',
-                'link' => 'admin.fines.index',
-                'icon' => 'ti ti-report-money',
-            ],
-        ]);
-    }
     
-    if ($superadmin) {
+    if ($superadmin || $admin) {
         $sidebarNavs = array_merge($sidebarNavs, [
             'Master',
+          
             [
-                'name' => 'Anggota',
-                'link' => 'admin.members.index',
-                'icon' => 'ti ti-user',
-            ],
-            [
-                'name' => 'Buku',
-                'link' => 'admin.books.index',
+                'name' => 'Data Terjemahan',
+                'link' => 'admin.terjemahan.index',
                 'icon' => 'ti ti-book',
-            ],
-            [
-                'name' => 'Kategori',
-                'link' => 'admin.categories.index',
-                'icon' => 'ti ti-category-2',
-            ],
-            [
-                'name' => 'Rak',
-                'link' => 'admin.racks.index',
-                'icon' => 'ti ti-columns',
             ],
         ]);
     }
@@ -84,7 +46,7 @@
         <div class="brand-logo d-flex align-items-center justify-content-between">
             <div class="pt-4 mx-auto">
                 <a href="{{ route('welcome') }}">
-                    <h2>E-<span class="text-primary">PERPUSJAR</span></h2>
+                    <h2>E-<span class="text-primary">TERJEMAHAN</span></h2>
                 </a>
             </div>
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">

@@ -17,11 +17,7 @@
         </ul>
         <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end gap-2" id="headerCollapse">
-                @role(['superadmin', 'kepala'])
-                    <li class=" nav-item" id="navBtn">
-                        <a href="{{route('admin.loans.list_print_request')}}" class="btn btn-success">Permintaan Cetak</a>
-                    </li>
-                @endrole
+                
                 {{-- <li class="nav-item" id="navBtn">
                     <a href="#" target="_blank" class="btn btn-outline-primary">Pengembalian buku</a>
                 </li>
