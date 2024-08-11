@@ -11,14 +11,14 @@
                 <div class="col-12 col-lg-7">
                     <div class="d-flex gap-2 justify-content-md-end">
                         <div>
-                            <form action="" method="get">
+                            {{-- <form action="" method="get">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" name="search" value="<?= $search ?? '' ?>"
                                         placeholder="Cari Terjemahan" aria-label="Cari Terjemahan"
                                         aria-describedby="searchButton">
                                     <button class="btn btn-outline-secondary" type="submit" id="searchButton">Cari</button>
                                 </div>
-                            </form>
+                            </form> --}}
                         </div>
                         <div>
                             @role(['admin', 'superadmin'])
@@ -54,7 +54,7 @@
                                 <td>
                                         
                                         <div class="d-flex justify-content-center" style="max-width: 150px; height: 120px;">
-                                            <img class="mx-auto mh-100" src="{{ $terjemahan->image}}">
+                                            <img class="mx-auto mh-100" src="{{ strpos($terjemahan->image, 'http') !== false ? $terjemahan->image : asset('/uploads/' . $terjemahan->image) }}">
                                         </div>
                                 </td>
                                 <td>{{ $terjemahan->ind }}</td>
@@ -70,7 +70,6 @@
                                     @role('superadmin')
                                     <form action="{{ route('admin.terjemahan.destroy', $terjemahan->id) }}" method="post">
                                         @csrf
-                                        @method('delete')
                                         <button type="submit" class="btn btn-danger w-100"
                                             onclick="return confirm('Are you sure?');">
                                             <i class="ti ti-trash"></i>

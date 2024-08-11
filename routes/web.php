@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
                     Route::post('/store', 'store')->name('store');
                     Route::get('/edit/{id}', 'edit')->name('edit');
                     Route::post('/update/{id}', 'update')->name('update');
-                    Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+                    Route::post('/destroy/{id}', 'destroy')->name('destroy');
                 });
                 
           
@@ -67,10 +67,10 @@ Route::middleware('auth')->group(function () {
                 ->group(function () {
                     Route::get('/', 'index')->name('index');
                     Route::get('/create', 'create')->name('create');
-                    Route::get('/show', 'show')->name('show');
                     Route::get('/edit/{id}', 'edit')->name('edit');
-                    Route::post('/destroy', 'destroy')->name('destroy');
+                    Route::post('/destroy/{id}', 'destroy')->name('destroy');
                     Route::post('/store', 'store')->name('store');
+                    Route::post('/update/{id}', 'update')->name('update');
 
                 });
          
