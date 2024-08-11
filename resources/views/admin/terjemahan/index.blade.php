@@ -14,7 +14,7 @@
                             <form action="" method="get">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" name="search" value="<?= $search ?? '' ?>"
-                                        placeholder="Cari anggota" aria-label="Cari Terjemahan"
+                                        placeholder="Cari Terjemahan" aria-label="Cari Terjemahan"
                                         aria-describedby="searchButton">
                                     <button class="btn btn-outline-secondary" type="submit" id="searchButton">Cari</button>
                                 </div>

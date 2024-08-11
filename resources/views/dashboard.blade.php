@@ -10,7 +10,7 @@
                         <i class="ti ti-book"></i>
                     </h2>
                     <h3>
-                        tes
+                        {{$countTerjemah}} Terjemahan
                     </h3>
                 </div>
             </div>

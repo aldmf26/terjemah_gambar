@@ -11,6 +11,7 @@ use App\Http\Controllers\Master\RaksController;
 use App\Http\Controllers\ReturnsController;
 use App\Http\Controllers\TerjemahanController;
 use App\Http\Controllers\UsersController;
+use App\Models\Terjemahan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +26,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $data = [
+        'list' => Terjemahan::all()
+    ];
+    return view('welcome',$data);
 })->name('welcome');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
