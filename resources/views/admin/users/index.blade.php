@@ -21,7 +21,7 @@
                             </form> --}}
                         </div>
                         <div>
-                            <a data-bs-toggle="modal" data-bs-target="#tambah" href="{{ route('admin.books.create') }}"
+                            <a data-bs-toggle="modal" data-bs-target="#tambah" href="#"
                                 class="btn btn-primary py-2">
                                 <i class="ti ti-plus"></i>
                                 Tambah Admin Baru
@@ -65,8 +65,7 @@
                                         <span class="badge bg-black rounded-3 fw-semibold">Pengguna</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <div class="d-flex justify-content-center gap-2">
+                                <td align="center">
                                         <a href="{{ route('admin.users.edit', $d->id) }}" class="btn btn-primary mb-2">
                                             <i class="ti ti-edit"></i>
                                             Edit
@@ -80,24 +79,7 @@
                                                 Delete
                                             </button>
                                         </form>
-                                    </div>
                                 </td>
-                                {{-- <td>
-                                    <a href="{{ route('admin.books.edit', $book->slug) }}"
-                                        class="d-block btn btn-primary w-100 mb-2">
-                                        <i class="ti ti-edit"></i>
-                                        Edit
-                                    </a>
-                                    <form action="{{ route('admin.books.destroy', $book->slug) }}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-danger w-100"
-                                            onclick="return confirm('Are you sure?');">
-                                            <i class="ti ti-trash"></i>
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td> --}}
                             </tr>
                         @endforeach
                     @endif
@@ -147,10 +129,10 @@
                 <div class="col-lg-12">
                     <div class="mb-2 form-group">
                         <label for="">Role</label>
-                        <select name="role" class="form-control select2" id="">
+                        <select required name="role" class="form-control select2" id="">
                             <option value="">- Pilih Role -</option>
                             @php
-                                $roles = ['admin', 'kepala', 'superadmin', 'pengguna'];
+                                $roles = ['admin', 'superadmin'];
                             @endphp
                             @foreach ($roles as $r)
                                 <option value="{{ $r }}">{{ $r }}</option>
