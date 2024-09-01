@@ -44,7 +44,7 @@ class FormTerjemahan extends Component
 
     public function updateLabel()
     {
-        $this->label = $this->textTo == 'en' ? 'Terjemah ke Inggris' : 'Terjemah ke Indonesian';
+        $this->label = $this->textTo == 'en' ? 'INDONESIA KE INGGRIS' : 'INGGRIS KE INDONESIA';
     }
 
     public function render()

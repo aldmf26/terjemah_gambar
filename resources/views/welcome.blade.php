@@ -16,9 +16,9 @@
     </div>
     <div class="d-flex justify-content-center">
         <div>
-            <h5 style="margin-top: 40px"><b>Hi Welcome</b></h5>
+            <h4 style="margin-top: 40px;"><b class="text-black">HI ! Welcome</b></h4>
             <p>Terjemahan Bahasa Indonesia ke Bahasa Inggris <br> (khusus untuk kosakata lahan basah)</p>
-            <button data-bs-toggle="modal" data-bs-target="#list" class="btn btn-primary">Lihat List Kata</button>
+            <button style="background-color: #1D129A" data-bs-toggle="modal" data-bs-target="#list" class="btn btn-primary">LIHAT LIST KATA </button>
 
             {{-- modal --}}
             <div class="modal fade text-left" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
