@@ -17,7 +17,7 @@
     <div class="d-flex justify-content-center">
         <div>
             <h4 style="margin-top: 40px;"><b class="text-black">HI ! Welcome</b></h4>
-            <p>Terjemahan Bahasa Indonesia ke Bahasa Inggris <br> (khusus untuk kosakata lahan basah)</p>
+            <p class="text-white">Terjemahan Bahasa Indonesia ke Bahasa Inggris <br> (khusus untuk kosakata lahan basah)</p>
             <button style="background-color: #1D129A" data-bs-toggle="modal" data-bs-target="#list" class="btn btn-primary">LIHAT LIST KATA </button>
 
             {{-- modal --}}

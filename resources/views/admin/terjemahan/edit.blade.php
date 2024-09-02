@@ -59,7 +59,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="ind" class="form-label">Indonesia</label>
-                            <input value="{{ $terjemahan->ind }}" placeholder="input kata tanpa spasi" @input="$event.target.value = $event.target.value.replace(/\s/g, '')" type="text" class="form-control @error('ind') is-invalid @enderror" id="ind"
+                            <input value="{{ $terjemahan->ind }}" placeholder="input kata"  type="text" class="form-control @error('ind') is-invalid @enderror" id="ind"
                                 name="ind" value="{{ old('ind') ?? '' }}" required>
                             <div class="invalid-feedback">
                                 @error('ind')
@@ -69,7 +69,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="en" class="form-label">Inggris</label>
-                            <input value="{{ $terjemahan->en }}" placeholder="input kata tanpa spasi" @input="$event.target.value = $event.target.value.replace(/\s/g, '')" type="text" class="form-control @error('en') is-invalid @enderror" id="en"
+                            <input value="{{ $terjemahan->en }}" placeholder="input kata"  type="text" class="form-control @error('en') is-invalid @enderror" id="en"
                                 name="en" value="{{ old('en') ?? '' }}" required>
                             <div class="invalid-feedback">
                                 @error('en')
