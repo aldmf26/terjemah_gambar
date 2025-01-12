@@ -47,7 +47,7 @@
                                             <td>{{ $d->ind }}</td>
                                             <td>{{ $d->en }}</td>
                                             <td>
-                                                <img data-bs-target="#detailGambar{{$d->id}}" data-bs-toggle="modal" width="30%" class="img-fluid" src="{{ $d->image }}"
+                                                <img data-bs-target="#detailGambar{{$d->id}}" data-bs-toggle="modal" width="30%" class="img-fluid" src="{{ strpos($d->image, 'http') !== false ? $d->image : asset('/uploads/' . $d->image) }}"
                                                     alt=""></td>
                                         </tr>
                                     @endforeach
@@ -76,7 +76,7 @@
 
                         </div>
                         <div class="modal-body">
-                            <img src="{{ $d->image }}" class="img-fluid" alt="">
+                            <img src="{{ strpos($d->image, 'http') !== false ? $d->image : asset('/uploads/' . $d->image) }}" class="img-fluid" alt="">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal">
