@@ -11,22 +11,27 @@
                 <div class="col-12 col-lg-7">
                     <div class="d-flex gap-2 justify-content-md-end">
                         <div>
-                            {{-- <form action="" method="get">
+                            <form action="" method="get">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" name="search" value="<?= $search ?? '' ?>"
                                         placeholder="Cari Terjemahan" aria-label="Cari Terjemahan"
                                         aria-describedby="searchButton">
                                     <button class="btn btn-outline-secondary" type="submit" id="searchButton">Cari</button>
                                 </div>
-                            </form> --}}
+                            </form>
                         </div>
-                        <div>
-                            @role(['admin', 'superadmin'])
-                            <a href="{{ route('admin.terjemahan.create') }}" class="btn btn-primary py-2">
-                                <i class="ti ti-plus"></i>
-                                Tambah Terjemah
-                            </a>
-                            @endrole
+                        <div class="d-flex gap-2">
+                            <div>
+                                {{-- <input wire:model.live='search' type="text" id="search" class="form-control" placeholder="pencarian"> --}}
+                            </div>
+                            <div>
+                                @role(['admin', 'superadmin'])
+                                    <a href="{{ route('admin.terjemahan.create') }}" class="btn btn-primary py-2">
+                                        <i class="ti ti-plus"></i>
+                                        Tambah Terjemah
+                                    </a>
+                                @endrole
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -52,30 +57,31 @@
                             <tr>
                                 <th scope="row">{{ $terjemahans->firstItem() + $key }}</th>
                                 <td>
-                                        
-                                        <div class="d-flex justify-content-center" style="max-width: 150px; height: 120px;">
-                                            <img class="mx-auto mh-100" src="{{ strpos($terjemahan->image, 'http') !== false ? $terjemahan->image : asset('/uploads/' . $terjemahan->image) }}">
-                                        </div>
+
+                                    <div class="d-flex justify-content-center" style="max-width: 150px; height: 120px;">
+                                        <img class="mx-auto mh-100"
+                                            src="{{ strpos($terjemahan->image, 'http') !== false ? $terjemahan->image : asset('/uploads/' . $terjemahan->image) }}">
+                                    </div>
                                 </td>
                                 <td>{{ $terjemahan->ind }}</td>
                                 <td>{{ $terjemahan->en }}</td>
                                 <td>
                                     @role(['admin', 'superadmin'])
-                                    <a href="{{ route('admin.terjemahan.edit', $terjemahan->id) }}"
-                                        class="d-block btn btn-primary w-100 mb-2">
-                                        <i class="ti ti-edit"></i>
-                                        Edit
-                                    </a>
+                                        <a href="{{ route('admin.terjemahan.edit', $terjemahan->id) }}"
+                                            class="d-block btn btn-primary w-100 mb-2">
+                                            <i class="ti ti-edit"></i>
+                                            Edit
+                                        </a>
                                     @endrole
                                     @role('superadmin')
-                                    <form action="{{ route('admin.terjemahan.destroy', $terjemahan->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger w-100"
-                                            onclick="return confirm('Are you sure?');">
-                                            <i class="ti ti-trash"></i>
-                                            Delete
-                                        </button>
-                                    </form>
+                                        <form action="{{ route('admin.terjemahan.destroy', $terjemahan->id) }}" method="post">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger w-100"
+                                                onclick="return confirm('Are you sure?');">
+                                                <i class="ti ti-trash"></i>
+                                                Delete
+                                            </button>
+                                        </form>
                                     @endrole
                                 </td>
                             </tr>

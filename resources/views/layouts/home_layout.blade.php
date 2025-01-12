@@ -10,7 +10,7 @@
 
 <style>
     body {
-        background-image: url('{{ asset('uploads/bg.jpeg') }}');
+        background-image: url('{{ asset('uploads/bge.jpeg') }}');
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;

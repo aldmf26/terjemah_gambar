@@ -7,12 +7,17 @@ use Illuminate\Http\Request;
 
 class TerjemahanController extends Controller
 {
-    public function index()
+    public function index(Request $r)
     {
-
+        if($r->has('search')){
+            $terjemahan = Terjemahan::where('ind', 'like', '%'.$r->search.'%')->orWhere('en', 'like', '%'.$r->search.'%')->paginate(10);
+        } else {
+            $terjemahan = Terjemahan::paginate(10);
+        }
         $data = [
             'title' => 'Terjemahan',
-            'terjemahans' => Terjemahan::paginate(10)
+            'terjemahans' => $terjemahan,
+            'search' => $r->search ?? ''
         ];
         return view('admin.terjemahan.index',$data);
     }
