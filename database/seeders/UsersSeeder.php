@@ -17,6 +17,7 @@ class UsersSeeder extends Seeder
         $roles = [
             'superadmin',
             'admin',
+            'user'
         ];
 
         foreach ($roles as $role) {

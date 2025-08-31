@@ -22,6 +22,11 @@
                 'link' => 'admin.terjemahan.index',
                 'icon' => 'ti ti-book',
             ],
+            [
+                'name' => 'Data Quiz',
+                'link' => 'quizzes.index',
+                'icon' => 'ti ti-book',
+            ],
         ]);
     }
 

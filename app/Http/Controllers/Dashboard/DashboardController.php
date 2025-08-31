@@ -15,7 +15,7 @@ class DashboardController extends Controller
     {
         $data = [
             'title' => 'Dashboard',
-            'countTerjemah' => Terjemahan::count()
+            'countTerjemah' => Terjemahan::count(),
 
         ];
         return view('dashboard', $data);

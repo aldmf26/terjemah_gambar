@@ -1,6 +1,6 @@
 @extends('layouts.home_layout')
 @section('content')
-    {{-- <a class="float-end btn btn-outline-primary" href="{{ route('login') }}">Login</a> --}}
+    <a class="float-end btn btn-warning" href="{{ route('login') }}">Login</a>
     <div class="p-2 d-flex justify-content-center align-items-center">
         <div>
             <img src="https://th.bing.com/th/id/R.157f1fc536efff5c468d2d80d6964d08?rik=LKzNtuCOVxc8ZQ&riu=http%3a%2f%2fulm.ac.id%2fid%2fwp-content%2fuploads%2f2016%2f03%2fLogo-Unlam.png&ehk=dx%2f2aEaKiCgckr54LaCeU8Date5Rp6bSNR6IgSmV5cI%3d&risl=&pid=ImgRaw&r=0"

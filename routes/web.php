@@ -8,6 +8,9 @@ use App\Http\Controllers\Master\BooksController;
 use App\Http\Controllers\Master\CategoriesController;
 use App\Http\Controllers\Master\MembersController;
 use App\Http\Controllers\Master\RaksController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizPlayController;
 use App\Http\Controllers\ReturnsController;
 use App\Http\Controllers\TerjemahanController;
 use App\Http\Controllers\UsersController;
@@ -25,6 +28,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware(['role:superadmin|admin'])->group(function() {
+    Route::resource('quizzes', QuizController::class);
+    Route::resource('questions', QuestionController::class);
+});
+
+Route::middleware(['role:user'])->group(function() {
+    Route::get('quiz/{quiz}/start', [QuizPlayController::class, 'start'])->name('quiz.start');
+    Route::post('quiz/{quiz}/submit', [QuizPlayController::class, 'submit'])->name('quiz.submit');
+});
+
+Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
+    Route::get('quiz/{quiz}/questions', [QuestionController::class, 'index'])->name('quiz.questions.index');
+    Route::get('quiz/{quiz}/questions/create', [QuestionController::class, 'create'])->name('quiz.questions.create');
+    Route::post('quiz/{quiz}/questions', [QuestionController::class, 'store'])->name('quiz.questions.store');
+    Route::get('{quiz}/questions/{question}/edit', [QuestionController::class, 'edit'])->name('quiz.questions.edit');
+    Route::put('{quiz}/questions/{question}', [QuestionController::class, 'update'])->name('quiz.questions.update');
+    Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
+});
+
+
 Route::get('/', function () {
     $data = [
         'list' => Terjemahan::all()
@@ -36,12 +59,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 
 
 Route::middleware('auth')->group(function () {
-    Route::controller(BookController::class)
-        ->prefix('book')
-        ->name('book.')
-        ->group(function () {
-            Route::get('/', 'index')->name('index');
-        });
+   
     
 
     Route::controller(DashboardController::class)
