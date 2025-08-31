@@ -3,7 +3,16 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Pertanyaan untuk Quiz: {{ $quiz->title }}</h5>
-            <a href="{{ route('quiz.questions.create', $quiz->id) }}" class="btn btn-primary mb-3">+ Tambah Pertanyaan</a>
+            <div class="d-flex justify-content-between gap-2">
+                <a href="{{ route('quiz.questions.create', $quiz->id) }}" class="btn btn-primary mb-3">+ Tambah Pertanyaan</a>
+                <form action="" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" value="<?= $search ?? '' ?>"
+                            placeholder="Cari Quiz" aria-label="Cari Quiz">
+                        <button class="btn btn-outline-secondary" type="submit" id="searchButton">Cari</button>
+                    </div>
+                </form>
+            </div>
             <table class="table table-bordered">
                 <thead>
                     <tr>

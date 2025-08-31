@@ -10,10 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
-    public function index(Quiz $quiz)
+    public function index(Quiz $quiz, Request $request)
     {
-        $questions = $quiz->questions()->with('options')->paginate(10);
-        return view('admin.questions.index', compact('quiz', 'questions'));
+        $search = $request->search;
+        
+        $questions = $quiz->questions()->with('options')->when($search, function ($query, $search) {
+            return $query->where('question_text', 'like', "%$search%");
+        })->paginate(10);
+        return view('admin.questions.index', compact('quiz', 'questions', 'search'));
     }
 
     public function create(Quiz $quiz)

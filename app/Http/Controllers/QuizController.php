@@ -17,7 +17,7 @@ class QuizController extends Controller
         $search = $request->search;
 
         $quizzes = Quiz::when($search, function ($query, $search) {
-            return $query->where('question', 'like', "%$search%");
+            return $query->where('title', 'like', "%$search%");
         })->paginate(10);
 
         return view('admin.quiz.index', compact('quizzes', 'title', 'search'));
