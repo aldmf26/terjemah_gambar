@@ -124,4 +124,42 @@ class QuizController extends Controller
 
         return redirect()->route('quizzes.index')->with('sukses', 'Quiz berhasil dihapus');
     }
+
+    // Dashboard: tampilkan list quiz
+    public function dashboard()
+    {
+        $quizzes = Quiz::withCount('questions')->get();
+        return view('participant.dashboard', compact('quizzes'));
+    }
+
+    // Halaman pilih tipe soal
+    public function showTypes(Quiz $quiz)
+    {
+        // ambil distinct tipe pertanyaan
+        $types = $quiz->questions()->select('question_type')->distinct()->pluck('question_type');
+        return view('participant.types', compact('quiz', 'types'));
+    }
+
+    // Mulai kerjakan quiz sesuai tipe
+    public function start(Quiz $quiz, $type)
+    {
+        $attemptId = $quiz->id;
+        $questions = $quiz->questions()->where('question_type', $type)->with('options')->get();
+        $duration = $quiz->duration ?? 15; // menit
+        return view('participant.start', compact('quiz', 'questions', 'type', 'duration', 'attemptId'));
+    }
+
+    // Submit jawaban
+    public function submit(Request $request, Quiz $quiz)
+    {
+        // Simpan skor sederhana (nanti bisa diperluas)
+        $score = rand(50, 100); // Dummy: ganti dengan logika perhitungan
+        // Result::create([
+        //     'user_id' => Auth::id(),
+        //     'quiz_id' => $quiz->id,
+        //     'score'   => $score,
+        // ]);
+
+        return redirect()->route('participant.dashboard')->with('success', 'Quiz selesai! Skor kamu: '.$score);
+    }
 }

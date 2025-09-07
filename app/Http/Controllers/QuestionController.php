@@ -13,11 +13,15 @@ class QuestionController extends Controller
     public function index(Quiz $quiz, Request $request)
     {
         $search = $request->search;
-        
+        $tipe = $request->tipe ?? 'multiple_choice';
+
+
         $questions = $quiz->questions()->with('options')->when($search, function ($query, $search) {
             return $query->where('question_text', 'like', "%$search%");
-        })->paginate(10);
-        return view('admin.questions.index', compact('quiz', 'questions', 'search'));
+        })->where('question_type', $tipe)->orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.questions.index', compact(
+            'quiz', 'questions', 'search', 'tipe'
+        ));
     }
 
     public function create(Quiz $quiz)
@@ -36,9 +40,16 @@ class QuestionController extends Controller
             //     'options.*.text' => 'required_if:question_type,multiple_choice|string',
             // ]);
 
+            $questionText = $request->question_text;
+
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('uploads/questions'), $imageName);
+                $questionText = $imageName;
+            }
 
             $question = $quiz->questions()->create([
-                'question_text' => $request->question_text,
+                'question_text' => $questionText,
                 'question_type' => $request->question_type,
             ]);
 
@@ -78,8 +89,8 @@ class QuestionController extends Controller
                     'option_text' => $request->correct_answer,
                     'is_correct' => 1,
                 ]);
-            } 
-            
+            }
+
 
             DB::commit();
             return redirect()->route('quiz.questions.index', $quiz->id)->with('sukses', 'Pertanyaan berhasil ditambahkan');
@@ -98,9 +109,19 @@ class QuestionController extends Controller
     {
         DB::beginTransaction();
         try {
-            // Update question text & type
+
+            $questionText = $question->question_text; // default pakai data lama
+
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('uploads/questions'), $imageName);
+                $questionText = $imageName;
+            } elseif ($request->filled('question_text')) {
+                $questionText = $request->question_text;
+            }
+
             $question->update([
-                'question_text' => $request->question_text,
+                'question_text' => $questionText,
                 'question_type' => $request->question_type,
             ]);
 
@@ -159,6 +180,6 @@ class QuestionController extends Controller
     {
         $question->delete();
 
-        return back()->with('success', 'Pertanyaan berhasil dihapus!');
+        return back()->with('sukses', 'Pertanyaan berhasil dihapus!');
     }
 }

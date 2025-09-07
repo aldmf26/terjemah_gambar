@@ -47,6 +47,13 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
 });
 
+Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participant.')->group(function () {
+    Route::get('/dashboard', [QuizController::class, 'dashboard'])->name('dashboard');
+    Route::get('/quiz/{quiz}', [QuizController::class, 'showTypes'])->name('quiz.types');
+    Route::get('/quiz/{quiz}/start/{type}', [QuizController::class, 'start'])->name('quiz.start');
+    Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+});
+
 
 Route::get('/', function () {
     $data = [

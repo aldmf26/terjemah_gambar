@@ -9,6 +9,8 @@
     <title>{{ $title }} | Terjemahan</title>
     <!-- Extra head e.g title -->
     @yield('head')
+
+    @livewireStyles
 </head>
 
 <body>
@@ -43,6 +45,7 @@
 
     <!-- Extra scripts -->
     @yield('scripts')
+    @livewireScripts
 </body>
 
 </html>

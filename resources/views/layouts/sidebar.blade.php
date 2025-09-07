@@ -2,6 +2,7 @@
     $auth = auth()->user();
     $superadmin = $auth->hasRole('superadmin');
     $admin = $auth->hasRole('admin');
+    $user = $auth->hasRole('user');
 
     $sidebarNavs = [
         'Home',
@@ -12,11 +13,25 @@
         ],
     ];
 
-    
+    if ($user) {
+        $sidebarNavs = array_merge($sidebarNavs, [
+            [
+                'name' => 'Daftar Quiz',
+                'link' => 'participant.dashboard',
+                'icon' => 'ti ti-bookmark',
+            ],
+            [
+                'name' => 'Riwayat',
+                'link' => 'quizzes.index',
+                'icon' => 'ti ti-timeline',
+            ],
+        ]);
+    }
+
     if ($superadmin || $admin) {
         $sidebarNavs = array_merge($sidebarNavs, [
             'Master',
-          
+
             [
                 'name' => 'Data Terjemahan',
                 'link' => 'admin.terjemahan.index',

@@ -4,12 +4,8 @@
         <div class="card-body">
             <x-alert />
             <h5 class="card-title">Tambah Pertanyaan untuk Quiz: {{ $quiz->title }}</h5>
-            <form method="POST" action="{{ route('quiz.questions.store', $quiz->id) }}">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('quiz.questions.store', $quiz->id) }}">
                 @csrf
-                <div class="mb-3">
-                    <label>Pertanyaan</label>
-                    <input type="text" name="question_text" class="form-control" required>
-                </div>
                 <div class="mb-3">
                     <label>Tipe Pertanyaan</label>
                     <select name="question_type" id="question_type" class="form-control">
@@ -18,6 +14,26 @@
                         <option value="fill_blank">Isi Kosong</option>
                         <option value="matching">Mencocokkan (Matching)</option>
                     </select>
+                </div>
+                <div class="mb-3 d-none" id="matching-type">
+                    <label class="form-label">Tipe Pertanyaan Matching</label>
+                    <br>
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="matching_by" id="matching_by_text" value="text" checked autocomplete="off">
+                        <label class="btn btn-outline-primary" for="matching_by_text">Text</label>
+
+                        <input type="radio" class="btn-check" name="matching_by" id="matching_by_image" value="image" autocomplete="off">
+                        <label class="btn btn-outline-primary" for="matching_by_image">Image</label>
+                    </div>
+                </div>
+                <div class="mb-3" id="matching-question">
+                    <label>Pertanyaan</label>
+                    <input type="text" name="question_text" class="form-control">
+                </div>
+                
+                <div class="mb-3 d-none" id="matching-image">
+                    <label class="form-label">Gambar</label>
+                    <input type="file" name="image" class="form-control">
                 </div>
 
                 {{-- Container dinamis --}}
@@ -47,6 +63,36 @@
             </form>
         </div>
     </div>
+
+    @section('scripts')
+        <script>
+            $(document).ready(function () {
+                $('#question_type').change(function (e) { 
+                    e.preventDefault();
+
+                    if ($(this).val() !== 'matching') {
+                        $('.gambarMatching').addClass('d-none');
+                    } else {
+                        $('.gambarMatching').removeClass('d-none');
+                        $('#matching-type').removeClass('d-none');
+
+                    }
+                });
+
+                $('input[name="matching_by"]').change(function (e) { 
+                    e.preventDefault();
+
+                    if ($(this).val() === 'text') {
+                        $('#matching-image').addClass('d-none');
+                        $('#matching-question').removeClass('d-none');
+                    } else {
+                        $('#matching-image').removeClass('d-none');
+                        $('#matching-question').addClass('d-none');
+                    }
+                });
+            });
+        </script>
+    @endsection
 
     <script>
         let questionType = document.getElementById('question_type');
@@ -135,8 +181,5 @@
                 e.target.closest('.matching-item').remove();
             }
         });
-
-        
     </script>
 @endsection
-

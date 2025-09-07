@@ -737,10 +737,6 @@ select {
   margin-left: auto;
   margin-right: auto;
 }
-.my-2 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
 .-ml-px {
   margin-left: -1px;
 }
@@ -753,6 +749,9 @@ select {
 .mb-0 {
   margin-bottom: 0px;
 }
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -764,6 +763,9 @@ select {
 }
 .mb-5 {
   margin-bottom: 1.25rem;
+}
+.me-2 {
+  margin-inline-end: 0.5rem;
 }
 .ml-1 {
   margin-left: 0.25rem;
@@ -782,6 +784,9 @@ select {
 }
 .mr-2 {
   margin-right: 0.5rem;
+}
+.ms-1 {
+  margin-inline-start: 0.25rem;
 }
 .ms-auto {
   margin-inline-start: auto;

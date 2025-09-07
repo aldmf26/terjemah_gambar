@@ -39,7 +39,6 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-        $request->merge(['uuid' => \Illuminate\Support\Str::uuid()]);
         
         $user = User::create([
             'name' => $request->name,
@@ -47,18 +46,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('pengguna');
-        Member::create([
-            'uuid' => $request->uuid,
-            'user_id' => $user->id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'date_of_birth' => $request->date_of_birth,
-            'gender' => $request->gender,
-        ]);
+        $user->assignRole('user');
+        
         event(new Registered($user));
 
         Auth::login($user);

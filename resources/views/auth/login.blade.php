@@ -25,6 +25,11 @@
                             required autocomplete="current-password" />
                     </div>
 
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ route('register') }}" class="text-decoration-none">Belum punya akun? Daftar disini</a>
+                    </div>
+                    
+
 
                     <div class="d-grid col-12 mx-auto m-3">
                         <button type="submit" class="btn btn-primary btn-block">Login</button>
