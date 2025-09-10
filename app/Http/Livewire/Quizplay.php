@@ -3,52 +3,90 @@
 namespace App\Http\Livewire;
 
 use App\Models\Answer;
+use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Quizplay extends Component
 {
     public $quiz;
     public $type;
-    public $questions;
-    public $answers = [];
     public $attemptId;
+    public $questions;
     public $currentIndex = 0;
+    public $currentQuestion;
+    public $answers = [];
+    public $attempt;
 
-    public function mount()
+    public $questionsPerPage = 2; // Untuk matching, tampilkan 4 soal sekaligus
+    public $currentQuestions = [];
+
+    public function mount($quizId, $type)
     {
-        // $this->quiz = Quiz::findOrFail($quizId);
-        // $this->type = $type;
-
-        // $attempt = QuizAttempt::create([
-        //     'quiz_id' => $this->quiz->id,
-        //     'user_id' => Auth::id(),
-        //     'start_time' => Carbon::now(),
-        // ]);
-
-        // $this->attemptId = $attempt->id;
-
-        $this->questions = $this->quiz->questions()
-            ->where('question_type', $this->type)
+        $this->quiz = Quiz::findOrFail($quizId);
+        // ambil pertanyaan sesuai type
+        $this->questions = Question::where('quiz_id', $quizId)
+            ->where('question_type', $type)
             ->with('options')
-            ->get()
-            ->values(); // reset index
+            ->when($type === 'matching', function ($query) {
+                return $query->take($this->questionsPerPage);
+            })
+            ->get();
+
+
+        $this->currentQuestion = $this->questions[$this->currentIndex] ?? null;
+
+        // buat attempt baru, tapi hanya jika user belum pernah mengerjakan quiz ini
+        $existingAttempt = QuizAttempt::where('quiz_id', $this->quiz->id)
+            ->where('user_id', Auth::id())
+            ->first();
+        if (!$existingAttempt) {
+            $this->attempt = QuizAttempt::create([
+                'quiz_id' => $this->quiz->id,
+                'user_id' => Auth::id(),
+                'started_at' => now(),
+            ]);
+            $this->attemptId = $this->attempt->id;
+        } else {
+            $this->attemptId = $existingAttempt->id;
+            $this->attempt = $existingAttempt;
+        }
     }
+
+
 
     public function next()
     {
-        if ($this->currentIndex < $this->questions->count() - 1) {
-            $this->currentIndex++;
+        if ($this->currentIndex < count($this->questions) - 1) {
+            if ($this->type === 'matching') {
+                // jika matching, maka tampilkan 4 lanjutan soalnya lagi
+                $this->currentIndex += $this->questionsPerPage - 1;
+            } else {
+                $this->currentIndex++;
+            }
+            $this->currentQuestion = $this->questions[$this->currentIndex];
         }
     }
 
-    public function prev()
+    public function back()
     {
         if ($this->currentIndex > 0) {
-            $this->currentIndex--;
+            if ($this->type === 'matching') {
+                // jika matching, maka tampilkan 4 soal sebelumnya lagi
+                $this->currentIndex -= $this->questionsPerPage - 1;
+            } else {
+                $this->currentIndex--;
+            }
+            $this->currentQuestion = $this->questions[$this->currentIndex];
         }
+    }
+
+    public function saveAnswer($questionId, $answer)
+    {
+        $this->answers[$questionId] = $answer;
     }
 
     public function submit()
@@ -62,8 +100,8 @@ class Quizplay extends Component
                 $isCorrect = $question->options->where('id', $answerValue)->where('is_correct', 1)->count() > 0;
                 if ($isCorrect) $score++;
                 Answer::updateOrCreate(
-                    ['quiz_attempt_id' => $this->attemptId, 'question_id' => $question->id],
-                    ['option_id' => $answerValue, 'is_correct' => $isCorrect]
+                    ['attempt_id' => $this->attemptId, 'question_id' => $question->id],
+                    ['user_answer' => $answerValue, 'is_correct' => $isCorrect]
                 );
             } elseif ($question->question_type == 'fill_blank') {
                 $correct = strtolower(trim($question->options->first()->option_text));
@@ -71,14 +109,14 @@ class Quizplay extends Component
                 $isCorrect = $userAnswer === $correct;
                 if ($isCorrect) $score++;
                 Answer::updateOrCreate(
-                    ['quiz_attempt_id' => $this->attemptId, 'question_id' => $question->id],
-                    ['answer_text' => $userAnswer, 'is_correct' => $isCorrect]
+                    ['attempt_id' => $this->attemptId, 'question_id' => $question->id],
+                    ['user_answer' => $userAnswer, 'is_correct' => $isCorrect]
                 );
             }
         }
 
         QuizAttempt::where('id', $this->attemptId)->update([
-            'end_time' => Carbon::now(),
+            'completed_at' => Carbon::now(),
             'score' => $score,
         ]);
 

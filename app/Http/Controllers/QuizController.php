@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Option;
 use App\Models\Quiz;
+use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -137,7 +138,34 @@ class QuizController extends Controller
     {
         // ambil distinct tipe pertanyaan
         $types = $quiz->questions()->select('question_type')->distinct()->pluck('question_type');
-        return view('participant.types', compact('quiz', 'types'));
+
+        // Ambil semua attempt user untuk quiz ini
+        $attempts = QuizAttempt::where('quiz_id', $quiz->id)
+            ->where('user_id', auth()->id())
+            ->withCount('answers')
+            ->get();
+
+        // Simpan tipe yang sudah pernah dijawab
+        $completedTypes = [];
+        $attemptMap = []; // simpan attempt_id per tipe
+
+        foreach ($attempts as $attempt) {
+            $answeredTypes = $attempt->answers()
+                ->with('question:id,question_type')
+                ->get()
+                ->pluck('question.question_type')
+                ->unique();
+
+            foreach ($answeredTypes as $t) {
+                $completedTypes[] = $t;
+                // Simpan attempt_id terakhir untuk tipe ini
+                $attemptMap[$t] = $attempt->id;
+            }
+        }
+
+        $completedTypes = array_unique($completedTypes);
+
+        return view('participant.types', compact('quiz', 'types', 'completedTypes', 'attemptMap'));
     }
 
     // Mulai kerjakan quiz sesuai tipe
@@ -149,17 +177,34 @@ class QuizController extends Controller
         return view('participant.start', compact('quiz', 'questions', 'type', 'duration', 'attemptId'));
     }
 
-    // Submit jawaban
-    public function submit(Request $request, Quiz $quiz)
-    {
-        // Simpan skor sederhana (nanti bisa diperluas)
-        $score = rand(50, 100); // Dummy: ganti dengan logika perhitungan
-        // Result::create([
-        //     'user_id' => Auth::id(),
-        //     'quiz_id' => $quiz->id,
-        //     'score'   => $score,
-        // ]);
 
-        return redirect()->route('participant.dashboard')->with('success', 'Quiz selesai! Skor kamu: '.$score);
+    public function result($attemptId)
+    {
+        $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers'])->findOrFail($attemptId);
+
+        $types = ['multiple_choice', 'true_false', 'fill_blank', 'matching'];
+
+        $summary = [];
+        foreach ($types as $type) {
+            $total = $attempt->quiz->questions()->where('question_type', $type)->count();
+            $answered = $attempt->answers->whereIn(
+                'question_id',
+                $attempt->quiz->questions()->where('question_type', $type)->pluck('id')
+            );
+
+            $correct = $answered->where('is_correct', 1)->count();
+
+            $summary[$type] = [
+                'total' => $total,
+                'answered' => $answered->count(),
+                'correct' => $correct,
+            ];
+        }
+
+        // total keseluruhan
+        $totalQuestions = $attempt->quiz->questions()->count();
+        $totalCorrect   = $attempt->answers->where('is_correct', 1)->count();
+
+        return view('participant.result', compact('attempt', 'summary', 'totalQuestions', 'totalCorrect'));
     }
 }

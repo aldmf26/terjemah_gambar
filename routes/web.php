@@ -52,6 +52,8 @@ Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participa
     Route::get('/quiz/{quiz}', [QuizController::class, 'showTypes'])->name('quiz.types');
     Route::get('/quiz/{quiz}/start/{type}', [QuizController::class, 'start'])->name('quiz.start');
     Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+    Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
+
 });
 
 

@@ -93,7 +93,7 @@ class QuestionController extends Controller
 
 
             DB::commit();
-            return redirect()->route('quiz.questions.index', $quiz->id)->with('sukses', 'Pertanyaan berhasil ditambahkan');
+            return redirect()->route('quiz.questions.index', [$quiz->id, 'tipe' => $request->question_type])->with('sukses', 'Pertanyaan berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
