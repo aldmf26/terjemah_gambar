@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center">
 
         <h5>Soal: {{ $index }}/{{ $total }}</h5>
-        <div class="mb-3 " x-data="{ timer: 15 }" x-init="setInterval(() => { timer > 0 ? timer-- : $wire.next(); }, 10000)">
+        <div class="mb-3 " x-data="{ timer: 15 }" x-init="setInterval(() => { timer > 0 ? timer-- : $wire.next(); }, 1000)">
             <span class="border border-warning align-items-center p-3 d-flex rounded-5 h5">
                 <i class="ti ti-clock me-1"></i>
                 <span x-text="`${timer}`"></span>

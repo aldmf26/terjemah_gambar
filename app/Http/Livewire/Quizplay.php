@@ -120,7 +120,7 @@ class Quizplay extends Component
             'score' => $score,
         ]);
 
-        return redirect()->route('quiz.result', $this->attemptId);
+        return redirect()->route('participant.quiz.result', $this->attemptId);
     }
 
     public function render()

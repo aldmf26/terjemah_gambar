@@ -51,7 +51,7 @@
                 {{-- Untuk isi kosong (fill blank) --}}
                 <div id="fill-blank-container" class="mb-3" style="display:none;">
                     <label>Jawaban Benar</label>
-                    <input type="text" name="correct_answer" class="form-control">
+                    <input type="text" name="correct_answer_fill" class="form-control">
                 </div>
 
                 <div id="matching-container" class="mb-3" style="display:none;">

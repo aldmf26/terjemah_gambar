@@ -81,14 +81,24 @@ class QuestionController extends Controller
                     'option_text' => 'False',
                     'is_correct' => $correct === 'False' ? 1 : 0,
                 ]);
-            } elseif ($request->question_type === 'fill_blank' || $request->question_type === 'matching') {
+            } elseif ($request->question_type === 'fill_blank') {
                 $question->update([
-                    'correct_answer' => $request->correct_answer,
+                    'option_text' => $request->correct_answer_fill,
+                    'is_correct' => 1,
+
                 ]);
-                $question->options()->create([
+            } elseif ($request->question_type === 'matching') {
+                $question->update([
                     'option_text' => $request->correct_answer,
                     'is_correct' => 1,
                 ]);
+                foreach ($request->correct_answer_pairs as $pair) {
+                    list($key, $value) = $pair;
+                    $question->options()->create([
+                        'option_text' => $value,
+                        'pair_key' => $key,
+                    ]);
+                }
             }
 
 
