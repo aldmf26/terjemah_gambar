@@ -82,7 +82,7 @@ class QuestionController extends Controller
                     'is_correct' => $correct === 'False' ? 1 : 0,
                 ]);
             } elseif ($request->question_type === 'fill_blank') {
-                $question->update([
+                $question->options()->create([
                     'option_text' => $request->correct_answer_fill,
                     'is_correct' => 1,
 
