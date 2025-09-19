@@ -91,34 +91,54 @@ class Quizplay extends Component
 
     public function submit()
     {
-        $score = 0;
         foreach ($this->answers as $questionId => $answerValue) {
-            $question = $this->questions->where('id', $questionId)->first();
-            if (!$question) continue;
+    $question = $this->questions->where('id', $questionId)->first();
+    if (!$question) continue;
 
-            if ($question->question_type == 'multiple_choice' || $question->question_type == 'true_false') {
-                $isCorrect = $question->options->where('id', $answerValue)->where('is_correct', 1)->count() > 0;
-                if ($isCorrect) $score++;
-                Answer::updateOrCreate(
-                    ['attempt_id' => $this->attemptId, 'question_id' => $question->id],
-                    ['user_answer' => $answerValue, 'is_correct' => $isCorrect]
-                );
-            } elseif ($question->question_type == 'fill_blank') {
-                $correct = strtolower(trim($question->options->first()->option_text));
-                $userAnswer = strtolower(trim($answerValue));
-                $isCorrect = $userAnswer === $correct;
-                if ($isCorrect) $score++;
-                Answer::updateOrCreate(
-                    ['attempt_id' => $this->attemptId, 'question_id' => $question->id],
-                    ['user_answer' => $userAnswer, 'is_correct' => $isCorrect]
-                );
-            }
+    $attempt = QuizAttempt::find($this->attemptId);
+
+    // Cari jawaban lama user
+    $oldAnswer = Answer::where('attempt_id', $this->attemptId)
+        ->where('question_id', $question->id)
+        ->first();
+
+    $isCorrect = false;
+
+    if ($question->question_type == 'multiple_choice' || $question->question_type == 'true_false') {
+        $isCorrect = $question->options->where('id', $answerValue)->where('is_correct', 1)->count() > 0;
+    } elseif ($question->question_type == 'fill_blank') {
+        $correct = strtolower(trim($question->options->first()->option_text));
+        $userAnswer = strtolower(trim($answerValue));
+        $isCorrect = $userAnswer === $correct;
+    }
+
+    // Update skor berdasarkan jawaban lama
+    if ($oldAnswer) {
+        if ($oldAnswer->is_correct && !$isCorrect) {
+            // dulunya benar, sekarang salah → kurangi skor
+            $attempt->score -= 10;
+        } elseif (!$oldAnswer->is_correct && $isCorrect) {
+            // dulunya salah, sekarang benar → tambah skor
+            $attempt->score += 10;
         }
+    } else {
+        // belum pernah jawab → kalau benar, tambah skor
+        if ($isCorrect) {
+            $attempt->score += 10;
+        }
+    }
 
-        QuizAttempt::where('id', $this->attemptId)->update([
-            'completed_at' => Carbon::now(),
-            'score' => $score,
-        ]);
+    // Simpan jawaban baru
+    Answer::updateOrCreate(
+        ['attempt_id' => $this->attemptId, 'question_id' => $question->id],
+        ['user_answer' => $answerValue, 'is_correct' => $isCorrect]
+    );
+
+    $attempt->completed_at = Carbon::now();
+    $attempt->save();
+}
+
+
 
         return redirect()->route('participant.quiz.result', $this->attemptId);
     }

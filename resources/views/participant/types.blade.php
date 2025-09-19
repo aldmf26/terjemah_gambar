@@ -17,7 +17,8 @@
                             @if(in_array($type,$completedTypes))
                                 <span class="badge bg-success">✔ Selesai</span>
                                 @if(isset($attemptMap[$type]))
-                                    <a href="{{ route('participant.quiz.result', $attemptMap[$type]) }}" 
+                                    <a href="{{ route('participant.quiz.result.detail', [$quiz->id, $type]) }}" 
+
                                        class="btn btn-sm btn-primary mt-1">
                                         Riwayat
                                     </a>

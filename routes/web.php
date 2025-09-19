@@ -48,11 +48,15 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participant.')->group(function () {
-    Route::get('/dashboard', [QuizController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [QuizController::class, 'dashboard_user'])->name('user.dashboard');
+    Route::get('/quiz', [QuizController::class, 'dashboard'])->name('dashboard');
+    Route::get('/riwayat', [QuizController::class, 'riwayat'])->name('riwayat');
     Route::get('/quiz/{quiz}', [QuizController::class, 'showTypes'])->name('quiz.types');
     Route::get('/quiz/{quiz}/start/{type}', [QuizController::class, 'start'])->name('quiz.start');
     Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
     Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
+    Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
+    Route::get('/quiz/result/detail/{attempt}/{type}', [QuizController::class, 'result_detail'])->name('quiz.result.detail');
 
 });
 

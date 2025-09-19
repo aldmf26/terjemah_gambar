@@ -180,7 +180,10 @@ class QuizController extends Controller
 
     public function result($attemptId)
     {
-        $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers'])->findOrFail($attemptId);
+        $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers'])->find($attemptId);
+        if (!$attempt) {
+            abort(404, 'Attempt tidak ditemukan');
+        }
 
         $types = ['multiple_choice', 'true_false', 'fill_blank', 'matching'];
 
@@ -206,5 +209,79 @@ class QuizController extends Controller
         $totalCorrect   = $attempt->answers->where('is_correct', 1)->count();
 
         return view('participant.result', compact('attempt', 'summary', 'totalQuestions', 'totalCorrect'));
+    }
+
+    public function result_detail($attemptId, $type)
+    {
+        $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers'])
+            ->findOrFail($attemptId);
+
+        $questions = $attempt->quiz->questions()
+            ->where('question_type', $type)
+            ->with('options')
+            ->get();
+
+        $answers = $attempt->answers()
+            ->whereIn('question_id', $questions->pluck('id'))
+            ->get();
+
+
+        $totalQuestions = $questions->count();
+        $totalCorrect = $answers->where('is_correct', true)->count();
+        $scorePercentage = $totalQuestions > 0 ? round(($totalCorrect / $totalQuestions) * 100) : 0;
+
+
+        return view('participant.result_detail', compact(
+            'attempt',
+            'questions',
+            'answers',
+            'type',
+            'totalQuestions',
+            'totalCorrect',
+            'scorePercentage'
+        ));
+    }
+
+    public function dashboard_user()
+    {
+        $userId = auth()->id();
+
+        // Statistik pribadi
+        $stats = DB::table('quiz_attempts')
+            ->selectRaw('
+            COUNT(DISTINCT quiz_id) as selesai,
+            SUM(score) as total_poin
+        ')
+            ->where('user_id', $userId)
+            ->first();
+        $totalQuiz   = Quiz::count();
+        $quizSelesai = $stats->selesai ?? 0;
+        $totalPoin   = $stats->total_poin ?? 0;
+
+        // Leaderboard Top 10
+        $ranking = DB::table('quiz_attempts')
+            ->join('users', 'quiz_attempts.user_id', '=', 'users.id')
+            ->select(
+                'users.name',
+                DB::raw('SUM(score) as total_poin')
+            )
+            ->groupBy('users.id', 'users.name')
+            ->orderByDesc('total_poin')
+            ->limit(10)
+            ->get();
+
+        return view('participant.dashboard_user', compact(
+            'totalQuiz',
+            'quizSelesai',
+            'totalPoin',
+            'ranking'
+        ));
+    }
+
+
+    public function riwayat()
+    {
+        $quizzes = Quiz::withCount('questions')->get();
+        return view('participant.riwayat', compact('quizzes'));
     }
 }

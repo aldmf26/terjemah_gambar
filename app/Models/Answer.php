@@ -19,4 +19,10 @@ class Answer extends Model
     {
         return $this->belongsTo(Question::class);
     }
+
+   public function option()
+{
+    return $this->belongsTo(Option::class, 'user_answer'); 
+    // karena user_answer menyimpan option_id
+}
 }

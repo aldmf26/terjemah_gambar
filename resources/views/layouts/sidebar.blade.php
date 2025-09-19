@@ -8,7 +8,7 @@
         'Home',
         [
             'name' => 'Dashboard',
-            'link' => 'dashboard',
+            'link' => $user ? 'participant.user.dashboard' : 'dashboard',
             'icon' => 'ti ti-layout-dashboard',
         ],
     ];
@@ -22,7 +22,7 @@
             ],
             [
                 'name' => 'Riwayat',
-                'link' => 'quizzes.index',
+                'link' => 'participant.riwayat',
                 'icon' => 'ti ti-timeline',
             ],
         ]);

@@ -88,17 +88,10 @@ class QuestionController extends Controller
 
                 ]);
             } elseif ($request->question_type === 'matching') {
-                $question->update([
+                $question->options()->create([
                     'option_text' => $request->correct_answer,
                     'is_correct' => 1,
                 ]);
-                foreach ($request->correct_answer_pairs as $pair) {
-                    list($key, $value) = $pair;
-                    $question->options()->create([
-                        'option_text' => $value,
-                        'pair_key' => $key,
-                    ]);
-                }
             }
 
 
