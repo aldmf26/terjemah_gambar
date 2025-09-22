@@ -28,12 +28,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['role:superadmin|admin'])->group(function() {
+Route::middleware(['role:superadmin|admin'])->group(function () {
+    Route::get('/dashboard', [QuizController::class, 'dashboard_admin'])->name('dashboard');
     Route::resource('quizzes', QuizController::class);
     Route::resource('questions', QuestionController::class);
 });
 
-Route::middleware(['role:user'])->group(function() {
+Route::middleware(['role:user'])->group(function () {
     Route::get('quiz/{quiz}/start', [QuizPlayController::class, 'start'])->name('quiz.start');
     Route::post('quiz/{quiz}/submit', [QuizPlayController::class, 'submit'])->name('quiz.submit');
 });
@@ -47,7 +48,7 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
 });
 
-Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participant.')->group(function () {
+Route::middleware(['auth', 'role:user|admin|superadmin'])->prefix('participant')->name('participant.')->group(function () {
     Route::get('/dashboard', [QuizController::class, 'dashboard_user'])->name('user.dashboard');
     Route::get('/quiz', [QuizController::class, 'dashboard'])->name('dashboard');
     Route::get('/riwayat', [QuizController::class, 'riwayat'])->name('riwayat');
@@ -57,7 +58,6 @@ Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participa
     Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
     Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
     Route::get('/quiz/result/detail/{attempt}/{type}', [QuizController::class, 'result_detail'])->name('quiz.result.detail');
-
 });
 
 
@@ -65,15 +65,15 @@ Route::get('/', function () {
     $data = [
         'list' => Terjemahan::all()
     ];
-    return view('welcome',$data);
+    return view('welcome', $data);
 })->name('welcome');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
-   
-    
+
+
 
     Route::controller(DashboardController::class)
         ->prefix('admin')
@@ -90,8 +90,8 @@ Route::middleware('auth')->group(function () {
                     Route::post('/update/{id}', 'update')->name('update');
                     Route::delete('/destroy/{id}', 'destroy')->name('destroy');
                 });
-                
-          
+
+
             Route::controller(TerjemahanController::class)
                 ->prefix('terjemahan')
                 ->name('terjemahan.')
@@ -102,9 +102,7 @@ Route::middleware('auth')->group(function () {
                     Route::post('/destroy/{id}', 'destroy')->name('destroy');
                     Route::post('/store', 'store')->name('store');
                     Route::post('/update/{id}', 'update')->name('update');
-
                 });
-         
         });
 });
 
