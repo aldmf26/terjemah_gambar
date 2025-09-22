@@ -129,7 +129,6 @@ class QuizController extends Controller
     // Dashboard: tampilkan list quiz
     public function dashboard()
     {
-        if (auth()->user()->role != 'user') return redirect()->route('dashboard');
         $quizzes = Quiz::withCount('questions')->get();
         return view('participant.dashboard', compact('quizzes'));
     }
@@ -250,8 +249,6 @@ class QuizController extends Controller
 
     public function dashboard_user()
     {
-        if (auth()->user()->role != 'user') return redirect()->route('dashboard');
-
         $userId = auth()->id();
 
         // Statistik pribadi
