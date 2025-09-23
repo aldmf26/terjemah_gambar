@@ -43,7 +43,7 @@
                                         <td align="left">Riwayat Jawaban</td>
                                         <td>:</td>
                                         <td class="text-end">
-                                            <a href="{{ route('participant.quiz.result.detail', [$attempt->id, $type]) }}"
+                                            <a href="{{ route('participant.quiz.result.detail', [$attemptId, $type]) }}"
                                                 class="btn btn-sm btn-primary">Lihat</a>
                                         </td>
                                     </tr>

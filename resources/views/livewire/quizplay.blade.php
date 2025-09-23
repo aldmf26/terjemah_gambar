@@ -130,11 +130,13 @@
                         <div class="d-flex float-end align-items-center gap-3 mb-3">
                             <div class="card" style="width: 80px; height: 80px;">
                                 <div class="card-body d-flex justify-content-center align-items-center">
-                                    <button @click="chooseRight({{ $opt['id'] }})" 
-    :class="rightMatched[{{ $opt['id'] }}] ? 'btn btn-success' : 'btn btn-outline-primary'"
-    :disabled="rightMatched[{{ $opt['id'] }}]">
-    <span x-text="rightMatched[{{ $opt['id'] }}] ? 'Dipasangkan' : 'Pilih'"></span>
-</button>
+                                    <button @click="chooseRight({{ $opt['id'] }})"
+                                        :class="rightMatched[{{ $opt['id'] }}] ? 'btn btn-success' :
+                                            'btn btn-outline-primary'"
+                                        :disabled="rightMatched[{{ $opt['id'] }}]">
+                                        <span
+                                            x-text="rightMatched[{{ $opt['id'] }}] ? 'Dipasangkan' : 'Pilih'"></span>
+                                    </button>
                                 </div>
                             </div>
                             <div class="card" style="width: 100px; height: 100px;" x-ref="right{{ $opt['id'] }}">
@@ -145,88 +147,103 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="d-flex justify-content-between">
+                    <div>
+                    <button @click="resetMatching" type="button" class="btn btn-warning"><i
+                            class="ti ti-refresh"></i>
+                        Reset</button>
+                </div>
+                <button wire:click="submit" type="button" @if(!$completed) disabled @endif class="btn btn-success">Finish <i
+                        class="ti ti-check"></i></button>
+                </div>
+            
             </div>
 
             <script>
-function matchingGame() {
-    return {
-        selectedLeft: null,
-        lines: [],
-        matches: {}, // Track pasangan yang sudah dibuat
-        rightMatched: {}, // Track right items yang sudah dipasangkan
-        
-        init() {
-            this.lines = [];
-            this.matches = {};
-            this.rightMatched = {};
-        },
-        
-        selectLeft(id) {
-            // Jika item sudah dipasangkan, tidak bisa dipilih lagi
-            if (this.matches[id]) return;
-            
-            this.selectedLeft = id;
-        },
-        
-        chooseRight(rid) {
-            if (!this.selectedLeft) return;
-            
-            // Cek apakah left item sudah dipasangkan
-            if (this.matches[this.selectedLeft]) return;
-            
-            // Cek apakah right item sudah dipasangkan
-            if (this.rightMatched[rid]) return;
+                function matchingGame() {
+                    return {
+                        selectedLeft: null,
+                        lines: [],
+                        matches: {}, // Track pasangan yang sudah dibuat
+                        rightMatched: {}, // Track right items yang sudah dipasangkan
 
-            // === Panggil Livewire dulu ===
-            @this.call('selectMatch', this.selectedLeft, rid);
+                        init() {
+                            this.lines = [];
+                            this.matches = {};
+                            this.rightMatched = {};
+                        },
 
-            // Simpan pasangan
-            this.matches[this.selectedLeft] = rid;
-            this.rightMatched[rid] = this.selectedLeft;
+                        selectLeft(id) {
+                            // Jika item sudah dipasangkan, tidak bisa dipilih lagi
+                            if (this.matches[id]) return;
 
-            // Ambil posisi kiri dan kanan
-            const leftEl = this.$refs['left' + this.selectedLeft];
-            const rightEl = this.$refs['right' + rid];
-            if (!leftEl || !rightEl) return;
+                            this.selectedLeft = id;
+                        },
 
-            // Titik tengah tiap kartu (relatif ke dokumen)
-            const lRect = leftEl.getBoundingClientRect();
-            const rRect = rightEl.getBoundingClientRect();
+                        chooseRight(rid) {
+                            if (!this.selectedLeft) return;
 
-            // Parent area untuk garis
-            const areaRect = this.$refs.connectionArea.getBoundingClientRect();
+                            // Cek apakah left item sudah dipasangkan
+                            if (this.matches[this.selectedLeft]) return;
 
-            // Titik awal dan akhir (relatif ke area garis)
-            const lX = lRect.right - areaRect.left;
-            const lY = lRect.top + lRect.height / 2 - areaRect.top;
-            const rX = rRect.left - areaRect.left;
-            const rY = rRect.top + rRect.height / 2 - areaRect.top;
+                            // Cek apakah right item sudah dipasangkan
+                            if (this.rightMatched[rid]) return;
 
-            // Hitung jarak & sudut
-            const dx = rX - lX;
-            const dy = rY - lY;
-            const length = Math.sqrt(dx * dx + dy * dy);
-            const angle = Math.atan2(dy, dx);
+                            // === Panggil Livewire dulu ===
+                            @this.call('selectMatch', this.selectedLeft, rid);
 
-            // Simpan garis
-            this.lines.push({
-                x: lX,
-                y: lY,
-                length,
-                angle
-            });
+                            // Simpan pasangan
+                            this.matches[this.selectedLeft] = rid;
+                            this.rightMatched[rid] = this.selectedLeft;
 
-            // Reset pilihan
-            this.selectedLeft = null;
-        }
-    }
-}
-</script>
+                            // Ambil posisi kiri dan kanan
+                            const leftEl = this.$refs['left' + this.selectedLeft];
+                            const rightEl = this.$refs['right' + rid];
+                            if (!leftEl || !rightEl) return;
+
+                            // Titik tengah tiap kartu (relatif ke dokumen)
+                            const lRect = leftEl.getBoundingClientRect();
+                            const rRect = rightEl.getBoundingClientRect();
+
+                            // Parent area untuk garis
+                            const areaRect = this.$refs.connectionArea.getBoundingClientRect();
+
+                            // Titik awal dan akhir (relatif ke area garis)
+                            const lX = lRect.right - areaRect.left;
+                            const lY = lRect.top + lRect.height / 2 - areaRect.top;
+                            const rX = rRect.left - areaRect.left;
+                            const rY = rRect.top + rRect.height / 2 - areaRect.top;
+
+                            // Hitung jarak & sudut
+                            const dx = rX - lX;
+                            const dy = rY - lY;
+                            const length = Math.sqrt(dx * dx + dy * dy);
+                            const angle = Math.atan2(dy, dx);
+
+                            // Simpan garis
+                            this.lines.push({
+                                x: lX,
+                                y: lY,
+                                length,
+                                angle
+                            });
+
+                            // Reset pilihan
+                            this.selectedLeft = null;
+                        },
+                        resetMatching() {
+                            this.selectedLeft = null;
+                            this.lines = [];
+                            this.matches = {};
+                            this.rightMatched = {};
+                        },
+                    }
+                }
+            </script>
         @endif
 
         <div class="d-flex justify-content-between">
             @if ($question->question_type != 'matching')
-
                 <div>
                     @if ($index > 1)
                         <button wire:click="prev" type="button" class="btn btn-secondary"><i
