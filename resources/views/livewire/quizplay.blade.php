@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center">
 
         <h5>Soal: {{ $index }}/{{ $total }}</h5>
-        <div class="mb-3 " x-data="{ timer: 15 }" x-init="setInterval(() => { timer > 0 ? timer-- : $wire.next(); }, 1000)">
+        <div class="mb-3 " x-data="{ timer: {{ $total * 10 }} }" x-init="setInterval(() => { timer > 0 ? timer-- : $wire.next(); }, 1000)">
             <span class="border border-warning align-items-center p-3 d-flex rounded-5 h5">
                 <i class="ti ti-clock me-1"></i>
                 <span x-text="`${timer}`"></span>
@@ -75,15 +75,15 @@
                 .line {
                     position: absolute;
                     height: 2px;
-                    background: #000;
-                    z-index: 10;
+                    background: #0d6efd;
+                    transform-origin: left center;
                 }
             </style>
-            <div class="row">
+            <div class="row" x-data="matchingGame()" x-init="init()">
                 <div class="col-5">
                     @foreach ($questions as $index => $question)
-                        <div class="d-flex align-items-center gap-3 mb-3" x-data="{ selected: null }">
-                            <div class="card" style="width: 100px; height: 100px;">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="card" style="width: 100px; height: 100px;" x-ref="left{{ $question->id }}">
                                 <div class="card-body d-flex justify-content-center align-items-center">
                                     @if (stripos($question->question_text, 'jpg') !== false ||
                                             stripos($question->question_text, 'jpeg') !== false ||
@@ -98,63 +98,152 @@
                             </div>
                             <div class="card" style="width: 80px; height: 80px;">
                                 <div class="card-body d-flex justify-content-center align-items-center">
-                                    <button @click="selected = $event.target"
-                                        class="btn btn-outline-primary">Pilih</button>
+                                    <button @click="selectLeft({{ $question->id }})"
+                                        :class="matches[{{ $question->id }}] ? 'btn btn-success' :
+                                            (selectedLeft === {{ $question->id }} ? 'btn btn-primary' :
+                                                'btn btn-outline-primary')"
+                                        :disabled="matches[{{ $question->id }}]">
+                                        <span x-text="matches[{{ $question->id }}] ? 'Selesai' : 'Pilih'"></span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-                <div class="col-2" style="position: relative;">
-                    <!-- Connecting lines will be added here dynamically with Alpine.js -->
-                    <div x-data="{ lines: [] }" x-init="$watch('lines', (value) => {
-                        // Logic to draw lines can be added here
-                    })" id="connection-area"></div>
+                {{-- Area garis --}}
+                <div class="col-2 position-relative" style="min-height: 400px;">
+                    <div id="connection-area" x-ref="connectionArea">
+                        <template x-for="(line, i) in lines" :key="i">
+                            <div class="line"
+                                :style="{
+                                    left: line.x + 'px',
+                                    top: line.y + 'px',
+                                    width: line.length + 'px',
+                                    transform: 'rotate(' + line.angle + 'rad)'
+                                }">
+                            </div>
+                        </template>
+                    </div>
                 </div>
                 <div class="col-5">
-                    @php
-                        // Collect all options and shuffle them
-                        $allOptions = collect();
-                        foreach ($questions as $question) {
-                            $allOptions = $allOptions->merge($question->options);
-                        }
-                        $shuffledOptions = $allOptions->shuffle();
-                    @endphp
-                    @foreach ($shuffledOptions as $option)
-                        <div class="d-flex float-end align-items-center gap-3 mb-3" x-data="{ selected: null }">
+                    @foreach ($optionsMatching as $key => $opt)
+                        <div class="d-flex float-end align-items-center gap-3 mb-3">
                             <div class="card" style="width: 80px; height: 80px;">
                                 <div class="card-body d-flex justify-content-center align-items-center">
-                                    <button @click="selected = $event.target"
-                                        class="btn btn-outline-primary">Pilih</button>
+                                    <button @click="chooseRight({{ $opt['id'] }})" 
+    :class="rightMatched[{{ $opt['id'] }}] ? 'btn btn-success' : 'btn btn-outline-primary'"
+    :disabled="rightMatched[{{ $opt['id'] }}]">
+    <span x-text="rightMatched[{{ $opt['id'] }}] ? 'Dipasangkan' : 'Pilih'"></span>
+</button>
                                 </div>
                             </div>
-                            <div class="card" style="width: 100px; height: 100px;">
+                            <div class="card" style="width: 100px; height: 100px;" x-ref="right{{ $opt['id'] }}">
                                 <div class="card-body d-flex justify-content-center align-items-center">
-                                    {{ $option->option_text }}
+                                    {{ $opt['text'] }}
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
+
+            <script>
+function matchingGame() {
+    return {
+        selectedLeft: null,
+        lines: [],
+        matches: {}, // Track pasangan yang sudah dibuat
+        rightMatched: {}, // Track right items yang sudah dipasangkan
+        
+        init() {
+            this.lines = [];
+            this.matches = {};
+            this.rightMatched = {};
+        },
+        
+        selectLeft(id) {
+            // Jika item sudah dipasangkan, tidak bisa dipilih lagi
+            if (this.matches[id]) return;
+            
+            this.selectedLeft = id;
+        },
+        
+        chooseRight(rid) {
+            if (!this.selectedLeft) return;
+            
+            // Cek apakah left item sudah dipasangkan
+            if (this.matches[this.selectedLeft]) return;
+            
+            // Cek apakah right item sudah dipasangkan
+            if (this.rightMatched[rid]) return;
+
+            // === Panggil Livewire dulu ===
+            @this.call('selectMatch', this.selectedLeft, rid);
+
+            // Simpan pasangan
+            this.matches[this.selectedLeft] = rid;
+            this.rightMatched[rid] = this.selectedLeft;
+
+            // Ambil posisi kiri dan kanan
+            const leftEl = this.$refs['left' + this.selectedLeft];
+            const rightEl = this.$refs['right' + rid];
+            if (!leftEl || !rightEl) return;
+
+            // Titik tengah tiap kartu (relatif ke dokumen)
+            const lRect = leftEl.getBoundingClientRect();
+            const rRect = rightEl.getBoundingClientRect();
+
+            // Parent area untuk garis
+            const areaRect = this.$refs.connectionArea.getBoundingClientRect();
+
+            // Titik awal dan akhir (relatif ke area garis)
+            const lX = lRect.right - areaRect.left;
+            const lY = lRect.top + lRect.height / 2 - areaRect.top;
+            const rX = rRect.left - areaRect.left;
+            const rY = rRect.top + rRect.height / 2 - areaRect.top;
+
+            // Hitung jarak & sudut
+            const dx = rX - lX;
+            const dy = rY - lY;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx);
+
+            // Simpan garis
+            this.lines.push({
+                x: lX,
+                y: lY,
+                length,
+                angle
+            });
+
+            // Reset pilihan
+            this.selectedLeft = null;
+        }
+    }
+}
+</script>
         @endif
 
         <div class="d-flex justify-content-between">
-            <div>
-                @if ($index > 1)
-                    <button wire:click="prev" type="button" class="btn btn-secondary"><i class="ti ti-arrow-left"></i>
-                        Back </button>
-                @endif
-            </div>
-            <div>
-                @if ($index < $total)
-                    <button wire:click="next" type="button" class="btn btn-primary">Next <i
-                            class="ti ti-arrow-right"></i></button>
-                @else
-                    <button wire:click="submit" type="button" class="btn btn-success">Finish <i
-                            class="ti ti-check"></i></button>
-                @endif
-            </div>
+            @if ($question->question_type != 'matching')
+
+                <div>
+                    @if ($index > 1)
+                        <button wire:click="prev" type="button" class="btn btn-secondary"><i
+                                class="ti ti-arrow-left"></i>
+                            Back </button>
+                    @endif
+                </div>
+                <div>
+                    @if ($index < $total)
+                        <button wire:click="next" type="button" class="btn btn-primary">Next <i
+                                class="ti ti-arrow-right"></i></button>
+                    @else
+                        <button wire:click="submit" type="button" class="btn btn-success">Finish <i
+                                class="ti ti-check"></i></button>
+                    @endif
+                </div>
+            @endif
         </div>
     @else
         <p>Tidak ada soal.</p>

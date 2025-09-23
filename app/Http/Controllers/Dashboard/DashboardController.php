@@ -13,6 +13,9 @@ class DashboardController extends Controller
 
     public function index()
     {
+        if(auth()->user()->hasRole('user')) {
+            return redirect('participant/dashboard');
+        }
         $data = [
             'title' => 'Dashboard',
             'countTerjemah' => Terjemahan::count(),

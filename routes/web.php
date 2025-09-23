@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['role:superadmin|admin'])->group(function () {
-    // Route::get('/dashboard', [QuizController::class, 'dashboard_admin'])->name('dashboard');
     Route::resource('quizzes', QuizController::class);
     Route::resource('questions', QuestionController::class);
 });

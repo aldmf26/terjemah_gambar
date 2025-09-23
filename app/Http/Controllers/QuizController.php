@@ -133,11 +133,6 @@ class QuizController extends Controller
         return view('participant.dashboard', compact('quizzes'));
     }
 
-    public function dashboard_admin()
-    {
-        dd('superadmin|admin');
-    }
-
     // Halaman pilih tipe soal
     public function showTypes(Quiz $quiz)
     {
