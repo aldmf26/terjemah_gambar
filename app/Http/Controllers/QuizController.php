@@ -24,6 +24,20 @@ class QuizController extends Controller
         return view('admin.quiz.index', compact('quizzes', 'title', 'search'));
     }
 
+    public function updateQuiz(Request $request, Quiz $quiz)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $quiz->update([
+            'title' => $request->title,
+        ]);
+
+        // balikan JSON biar fetch() tau berhasil
+        return response()->json(['success' => true]);
+    }
+
     public function create()
     {
         $title = "Tambah Quiz";
@@ -183,10 +197,10 @@ class QuizController extends Controller
         // $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers'])->find($attemptId);
 
         $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers.question', 'user'])
-        ->where('quiz_id', $attemptId)
-        ->where('user_id', auth()->id())
-        ->latest()
-        ->firstOrFail();
+            ->where('quiz_id', $attemptId)
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->firstOrFail();
 
         if (!$attempt) {
             abort(404, 'Attempt tidak ditemukan');
@@ -215,20 +229,20 @@ class QuizController extends Controller
         $totalQuestions = $attempt->quiz->questions()->count();
         $totalCorrect   = $attempt->answers->where('is_correct', 1)->count();
 
-        return view('participant.result', compact('attempt', 'summary', 'totalQuestions', 'totalCorrect','attemptId'));
+        return view('participant.result', compact('attempt', 'summary', 'totalQuestions', 'totalCorrect', 'attemptId'));
     }
 
     public function result_detail($attemptId, $type)
     {
         // Ambil attempt terbaru user untuk quiz dan type tertentu
-    $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers.question', 'user'])
-        ->where('quiz_id', $attemptId)
-        ->where('user_id', auth()->id())
-        ->whereHas('answers.question', function($query) use ($type) {
-            $query->where('question_type', $type);
-        })
-        ->latest()
-        ->firstOrFail();
+        $attempt = \App\Models\QuizAttempt::with(['quiz.questions.options', 'answers.question', 'user'])
+            ->where('quiz_id', $attemptId)
+            ->where('user_id', auth()->id())
+            ->whereHas('answers.question', function ($query) use ($type) {
+                $query->where('question_type', $type);
+            })
+            ->latest()
+            ->firstOrFail();
 
         $questions = $attempt->quiz->questions()
             ->where('question_type', $type)

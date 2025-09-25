@@ -25,6 +25,7 @@
                             <ul class="d-flex gap-2">
                                 @role(['admin', 'superadmin'])
                                 <li><a href="{{ route('admin.terjemahan.index') }}" class="btn btn-sm btn-outline-primary">Data Terjemahan</a></li>
+                                <li><a href="{{ route('quizzes.index') }}" class="btn btn-sm btn-outline-primary">Data Quiz</a></li>
                                 @endrole
                                 @role('superadmin')
                                 <li><a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-outline-primary">Admin</a></li>

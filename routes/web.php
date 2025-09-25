@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['role:superadmin|admin'])->group(function () {
     Route::resource('quizzes', QuizController::class);
     Route::resource('questions', QuestionController::class);
+    Route::patch('quizzes/{quiz}', [QuizController::class, 'updateQuiz'])->name('quizzes.update');
 });
 
 Route::middleware(['role:user'])->group(function () {
