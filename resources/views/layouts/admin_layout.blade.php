@@ -2,20 +2,22 @@
 <html lang="en">
 
 <head>
-    @include('layouts.head')
     @php
-        $title = isset($title) ? $title : "";
+        $title = isset($title) ? $title : '';
     @endphp
     <title>{{ $title }} | Terjemahan</title>
     <!-- Extra head e.g title -->
-    @yield('head')
+    @include('layouts.head')
+
+    {{-- @yield('head') --}}
 
     @livewireStyles
 </head>
 
 <body>
     <!--  Body Wrapper -->
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar -->
         @include('layouts.sidebar')
 
@@ -38,13 +40,13 @@
 
     <!-- Scripts -->
     @include('layouts.scripts')
-    <script src="{{ asset("assets/js/sidebarmenu.js") }}"></script>
-    <script src="{{ asset("assets/js/app.min.js") }}"></script>
-    <script src="{{ asset("assets/libs/simplebar/simplebar.js") }}"></script>
-    @include('imports.scripts.admin')
+    <script src="{{ asset('assets/js/sidebarmenu.js') }}"></script>
+    <script src="{{ asset('assets/js/app.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/simplebar/simplebar.js') }}"></script>
+    {{-- @include('imports.scripts.admin') --}}
 
     <!-- Extra scripts -->
-    @yield('scripts')
+    {{-- @yield('scripts') --}}
     @livewireScripts
 </body>
 
