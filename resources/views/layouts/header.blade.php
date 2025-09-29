@@ -23,8 +23,13 @@
                     <div class="message-body">
                         <div class="mx-3 mt-2">
                             <ul class="d-flex gap-2">
+                                @role('user')
+                                    <li><a href="{{ route('participant.dashboard') }}" class="btn btn-sm btn-outline-primary">Daftar Quiz</a></li>
+                                    <li><a href="{{ route('participant.riwayat') }}" class="btn btn-sm btn-outline-primary">Riwayat</a></li>
+                                @endrole
                                 @role(['admin', 'superadmin'])
                                 <li><a href="{{ route('admin.terjemahan.index') }}" class="btn btn-sm btn-outline-primary">Data Terjemahan</a></li>
+                                <li><a href="{{ route('quizzes.index') }}" class="btn btn-sm btn-outline-primary">Data Quiz</a></li>
                                 @endrole
                                 @role('superadmin')
                                 <li><a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-outline-primary">Admin</a></li>

@@ -8,7 +8,7 @@
         'Home',
         [
             'name' => 'Dashboard',
-            'link' => $user ? 'participant.user.dashboard' : 'dashboard',
+            'link' => 'participant.user.dashboard',
             'icon' => 'ti ti-layout-dashboard',
         ],
     ];

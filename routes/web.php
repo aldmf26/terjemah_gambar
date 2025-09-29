@@ -29,9 +29,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['role:superadmin|admin'])->group(function () {
-    Route::get('/dashboard', [QuizController::class, 'dashboard_admin'])->name('dashboard');
     Route::resource('quizzes', QuizController::class);
     Route::resource('questions', QuestionController::class);
+    Route::patch('quizzes/{quiz}', [QuizController::class, 'updateQuiz'])->name('quizzes.update');
 });
 
 Route::middleware(['role:user'])->group(function () {
@@ -48,16 +48,17 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
 });
 
-Route::middleware(['auth', 'role:user|admin|superadmin'])->prefix('participant')->name('participant.')->group(function () {
+Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participant.')->group(function () {
     Route::get('/dashboard', [QuizController::class, 'dashboard_user'])->name('user.dashboard');
     Route::get('/quiz', [QuizController::class, 'dashboard'])->name('dashboard');
-    Route::get('/riwayat', [QuizController::class, 'riwayat'])->name('riwayat');
     Route::get('/quiz/{quiz}', [QuizController::class, 'showTypes'])->name('quiz.types');
     Route::get('/quiz/{quiz}/start/{type}', [QuizController::class, 'start'])->name('quiz.start');
     Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
-    Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
-    Route::get('/quiz/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
-    Route::get('/quiz/result/detail/{attempt}/{type}', [QuizController::class, 'result_detail'])->name('quiz.result.detail');
+});
+Route::middleware(['auth', 'role:user'])->prefix('participant/riwayat')->name('participant.')->group(function () {
+    Route::get('/', [QuizController::class, 'riwayat'])->name('riwayat');
+    Route::get('/result/{attempt}', [QuizController::class, 'result'])->name('quiz.result');
+    Route::get('/result/detail/{attempt}/{type}', [QuizController::class, 'result_detail'])->name('quiz.result.detail');
 });
 
 

@@ -29,16 +29,26 @@
             @foreach ($questions as $question)
                 <div class="card mb-3">
                     <div class="card-header bg-light">
-                        <h5>{{ $loop->iteration }}. {{ $question->question_text }}</h5>
+                        <h5>{{ $loop->iteration }}. 
+                            @if (stripos($question->question_text, '.jpg') !== false ||
+                                    stripos($question->question_text, '.jpeg') !== false ||
+                                    stripos($question->question_text, '.png') !== false ||
+                                    stripos($question->question_text, '.webp') !== false)
+                                <img src="{{ asset('/uploads/questions/' . $question->question_text) }}"
+                                    alt="Question Image" style="max-width: 150px; max-height: 150px;" class="img-thumbnail">
+                            @else
+                                {{ $question->question_text }}
+                            @endif
+                        </h5>
                     </div>
                     <div class="card-body">
                         @if ($question->question_type === 'multiple_choice')
                             <h6>Pertanyaan Tipe: Pilihan Ganda</h6>
-                            <p>Jawaban Anda: 
-    <strong>
-        {{ optional($answers->where('question_id', $question->id)->first()->option)->option_text ?? '-' }}
-    </strong>
-</p>
+                            <p>Jawaban Anda:
+                                <strong>
+                                    {{ optional($answers->where('question_id', $question->id)->first()->option)->option_text ?? '-' }}
+                                </strong>
+                            </p>
                             <p>Status:
                                 @if ($answers->where('question_id', $question->id)->first()->is_correct)
                                     <span class="badge bg-success">Benar</span>
