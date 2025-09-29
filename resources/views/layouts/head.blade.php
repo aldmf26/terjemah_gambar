@@ -6,5 +6,4 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.css" />
   
-<script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
