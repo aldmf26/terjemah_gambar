@@ -4,7 +4,8 @@
         <div class="card-body">
             <x-alert />
             <h5 class="card-title">Edit Pertanyaan untuk Quiz: {{ $quiz->title }}</h5>
-            <form enctype="multipart/form-data" method="POST" action="{{ route('quiz.questions.update', [$quiz->id, $question->id]) }}">
+            <form enctype="multipart/form-data" method="POST"
+                action="{{ route('quiz.questions.update', [$quiz->id, $question->id]) }}">
                 @csrf
                 @method('PUT')
                 <div class="mb-3">
@@ -23,47 +24,53 @@
                 </div>
 
                 @if ($question->question_type != 'matching')
-                <div class="mb-3">
-                    <label>Pertanyaan</label>
-                    <input type="text" name="question_text" class="form-control" value="{{ $question->question_text }}"
-                        required>
-                </div>
-                    @else
-
+                    <div class="mb-3">
+                        <label>Pertanyaan</label>
+                        <input type="text" name="question_text" class="form-control"
+                            value="{{ $question->question_text }}" required>
+                    </div>
+                @else
                     <div class="mb-3" id="matching-type">
                         <label class="form-label">Tipe Pertanyaan Matching</label>
                         <br>
-                        <button type="button" id="matching_by_text" class="btn btn-primary {{ stripos($question->question_text, 'jpg') === false && 
-                            stripos($question->question_text, 'jpeg') === false && 
-                            stripos($question->question_text, 'png') === false && 
-                            stripos($question->question_text, 'webp') === false ? '' : 'd-none' }}">Text</button>
-                        <button type="button" id="matching_by_image" class="btn btn-primary {{ stripos($question->question_text, 'jpg') !== false || 
-                            stripos($question->question_text, 'jpeg') !== false || 
-                            stripos($question->question_text, 'png') !== false || 
-                            stripos($question->question_text, 'webp') !== false ? '' : 'd-none' }}">Image</button>
+                        <button type="button" id="matching_by_text"
+                            class="btn btn-primary {{ stripos($question->question_text, 'jpg') === false &&
+                            stripos($question->question_text, 'jpeg') === false &&
+                            stripos($question->question_text, 'png') === false &&
+                            stripos($question->question_text, 'webp') === false
+                                ? ''
+                                : 'd-none' }}">Text</button>
+                        <button type="button" id="matching_by_image"
+                            class="btn btn-primary {{ stripos($question->question_text, 'jpg') !== false ||
+                            stripos($question->question_text, 'jpeg') !== false ||
+                            stripos($question->question_text, 'png') !== false ||
+                            stripos($question->question_text, 'webp') !== false
+                                ? ''
+                                : 'd-none' }}">Image</button>
                     </div>
 
-                    @if (stripos($question->question_text, 'jpg') !== false || 
-                            stripos($question->question_text, 'jpeg') !== false || 
-                            stripos($question->question_text, 'png') !== false || 
+                    @if (stripos($question->question_text, 'jpg') !== false ||
+                            stripos($question->question_text, 'jpeg') !== false ||
+                            stripos($question->question_text, 'png') !== false ||
                             stripos($question->question_text, 'webp') !== false)
                         <div class="d-flex justify-content-center mt-2" style="max-width: 150px; height: 120px;">
-                            <img class="mx-auto mh-100" src="{{ asset('/uploads/questions/' . $question->question_text) }}">
+                            <img class="mx-auto mh-100"
+                                src="{{ asset('/uploads/questions/' . $question->question_text) }}">
                         </div>
                         <div class="mb-3" id="matching-image">
                             <label class="form-label">Gambar</label>
                             <input type="file" name="image" class="form-control">
                         </div>
-                        @else
+                    @else
                         <div class="mb-3" id="matching-question">
                             <label>Pertanyaan</label>
-                            <input type="text" name="question_text" value="{{ $question->question_text }}" class="form-control">
+                            <input type="text" name="question_text" value="{{ $question->question_text }}"
+                                class="form-control">
                         </div>
                     @endif
-
                 @endif
 
-                
+
 
                 {{-- Multiple choice --}}
                 <div id="options-container" class="mb-3"
@@ -75,10 +82,10 @@
                                 value="{{ $option->option_text }}" class="form-control mb-1" placeholder="Jawaban">
                             <label><input type="checkbox" name="options[{{ $i }}][is_correct]"
                                     {{ $option->is_correct ? 'checked' : '' }}> Benar</label>
-                            <button type="button" class="btn btn-sm btn-danger mb-2 float-end remove-option">X</button>
+                            {{-- <button type="button" class="btn btn-sm btn-danger mb-2 float-end remove-option">X</button> --}}
                         </div>
                     @endforeach
-                    <button type="button" id="add-option" class="btn btn-sm btn-secondary mt-2">+ Tambah Opsi</button>
+                    {{-- <button type="button" id="add-option" class="btn btn-sm btn-secondary mt-2">+ Tambah Opsi</button> --}}
                 </div>
 
                 {{-- True/False --}}
