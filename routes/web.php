@@ -46,6 +46,39 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::get('{quiz}/questions/{question}/edit', [QuestionController::class, 'edit'])->name('quiz.questions.edit');
     Route::put('{quiz}/questions/{question}', [QuestionController::class, 'update'])->name('quiz.questions.update');
     Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
+
+    Route::controller(TerjemahanController::class)
+                ->prefix('terjemahan')
+                ->name('terjemahan.')
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/create', 'create')->name('create');
+                    Route::get('/edit/{id}', 'edit')->name('edit');
+                    Route::post('/destroy/{id}', 'destroy')->name('destroy');
+                    Route::post('/store', 'store')->name('store');
+                    Route::post('/update/{id}', 'update')->name('update');
+                });
+});
+Route::middleware(['auth', 'role:superadmin'])->group(function () {
+    Route::controller(DashboardController::class)
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            // master data
+            Route::controller(UsersController::class)
+                ->prefix('users')
+                ->name('users.')
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/store', 'store')->name('store');
+                    Route::get('/edit/{id}', 'edit')->name('edit');
+                    Route::post('/update/{id}', 'update')->name('update');
+                    Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+                });
+
+
+            
+        });
 });
 
 Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participant.')->group(function () {
@@ -70,41 +103,5 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
-
-
-Route::middleware('auth')->group(function () {
-
-
-
-    Route::controller(DashboardController::class)
-        ->prefix('admin')
-        ->name('admin.')
-        ->group(function () {
-            // master data
-            Route::controller(UsersController::class)
-                ->prefix('users')
-                ->name('users.')
-                ->group(function () {
-                    Route::get('/', 'index')->name('index');
-                    Route::post('/store', 'store')->name('store');
-                    Route::get('/edit/{id}', 'edit')->name('edit');
-                    Route::post('/update/{id}', 'update')->name('update');
-                    Route::delete('/destroy/{id}', 'destroy')->name('destroy');
-                });
-
-
-            Route::controller(TerjemahanController::class)
-                ->prefix('terjemahan')
-                ->name('terjemahan.')
-                ->group(function () {
-                    Route::get('/', 'index')->name('index');
-                    Route::get('/create', 'create')->name('create');
-                    Route::get('/edit/{id}', 'edit')->name('edit');
-                    Route::post('/destroy/{id}', 'destroy')->name('destroy');
-                    Route::post('/store', 'store')->name('store');
-                    Route::post('/update/{id}', 'update')->name('update');
-                });
-        });
-});
 
 require __DIR__ . '/auth.php';
