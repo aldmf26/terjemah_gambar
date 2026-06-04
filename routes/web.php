@@ -48,8 +48,8 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
 
     Route::controller(TerjemahanController::class)
-                ->prefix('terjemahan')
-                ->name('terjemahan.')
+                ->prefix('admin.terjemahan')
+                ->name('admin.terjemahan.')
                 ->group(function () {
                     Route::get('/', 'index')->name('index');
                     Route::get('/create', 'create')->name('create');
