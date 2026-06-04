@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\HolidayNotificationController;
 use App\Http\Controllers\FineController;
 use App\Http\Controllers\LoansController;
 use App\Http\Controllers\Master\BooksController;
@@ -28,16 +29,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['role:superadmin|admin'])->group(function () {
-    Route::resource('quizzes', QuizController::class);
-    Route::resource('questions', QuestionController::class);
-    Route::patch('quizzes/{quiz}', [QuizController::class, 'updateQuiz'])->name('quizzes.update');
-});
 
-Route::middleware(['role:user'])->group(function () {
-    Route::get('quiz/{quiz}/start', [QuizPlayController::class, 'start'])->name('quiz.start');
-    Route::post('quiz/{quiz}/submit', [QuizPlayController::class, 'submit'])->name('quiz.submit');
-});
 
 Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::get('quiz/{quiz}/questions', [QuestionController::class, 'index'])->name('quiz.questions.index');
@@ -46,6 +38,10 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::get('{quiz}/questions/{question}/edit', [QuestionController::class, 'edit'])->name('quiz.questions.edit');
     Route::put('{quiz}/questions/{question}', [QuestionController::class, 'update'])->name('quiz.questions.update');
     Route::delete('{quiz}/questions/{question}', [QuestionController::class, 'destroy'])->name('quiz.questions.destroy');
+
+    Route::resource('quizzes', QuizController::class);
+    Route::resource('questions', QuestionController::class);
+    Route::patch('quizzes/{quiz}', [QuizController::class, 'updateQuiz'])->name('quizzes.update');
 
     Route::controller(TerjemahanController::class)
                 ->prefix('admin.terjemahan')
@@ -57,7 +53,11 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
                     Route::post('/destroy/{id}', 'destroy')->name('destroy');
                     Route::post('/store', 'store')->name('store');
                     Route::post('/update/{id}', 'update')->name('update');
-                });
+    });
+
+    Route::get('/holiday-notifications', [HolidayNotificationController::class, 'index'])->name('admin.holiday.index');
+    Route::post('/holiday-notifications', [HolidayNotificationController::class, 'store'])->name('admin.holiday.store');
+    Route::delete('/holiday-notifications/{id}', [HolidayNotificationController::class, 'destroy'])->name('admin.holiday.destroy');
 });
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::controller(DashboardController::class)
@@ -81,6 +81,11 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
         });
 });
 
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('quiz/{quiz}/start', [QuizPlayController::class, 'start'])->name('quiz.start');
+    Route::post('quiz/{quiz}/submit', [QuizPlayController::class, 'submit'])->name('quiz.submit');
+});
+
 Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participant.')->group(function () {
     Route::get('/dashboard', [QuizController::class, 'dashboard_user'])->name('user.dashboard');
     Route::get('/quiz', [QuizController::class, 'dashboard'])->name('dashboard');
@@ -96,8 +101,13 @@ Route::middleware(['auth', 'role:user'])->prefix('participant/riwayat')->name('p
 
 
 Route::get('/', function () {
+    $currentDate = now()->toDateString();
+    $activeHoliday = \App\Models\HolidayNotification::where('start_date', '<=', $currentDate)
+                        ->where('end_date', '>=', $currentDate)
+                        ->get();
     $data = [
-        'list' => Terjemahan::all()
+        'list' => Terjemahan::all(),
+        'activeHoliday' => $activeHoliday
     ];
     return view('welcome', $data);
 })->name('welcome');

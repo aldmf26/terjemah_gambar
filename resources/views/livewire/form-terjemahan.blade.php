@@ -1,7 +1,7 @@
-<div>
+<div class="mx-auto" style="max-width: 420px;">
     <button style="letter-spacing: 1px" class="mt-2 text-black btn btn-{{$textTo == 'en' ? 'danger' : 'warning'}}" wire:click="textTo('{{$textTo}}')">{{$label}}</button>
 
-    <input autofocus wire:model.debounce.500ms="inputText" type="text" class="form-control border-info border-2 mt-2 text-black"
+    <input autofocus wire:model.debounce.500ms="inputText" type="text" class="form-control border-info border-2 mt-2 text-black bg-white" style="background: #fff; color: #000;"
         placeholder="masukan yang ingin kamu terjemahkan">
         <div wire:loading='inputText' class="mt-2 spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>

@@ -42,6 +42,11 @@
                 'link' => 'quizzes.index',
                 'icon' => 'ti ti-book',
             ],
+            [
+                'name' => 'Hari Besar',
+                'link' => 'admin.holiday.index',
+                'icon' => 'ti ti-calendar-event',
+            ],
         ]);
     }
 
