@@ -68,13 +68,17 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::get('/holiday-notifications', [HolidayNotificationController::class, 'index'])->name('admin.holiday.index');
     Route::post('/holiday-notifications', [HolidayNotificationController::class, 'store'])->name('admin.holiday.store');
     Route::delete('/holiday-notifications/{id}', [HolidayNotificationController::class, 'destroy'])->name('admin.holiday.destroy');
+
+    // Motivasi CRUD routes (accessible by admin & superadmin)
+    Route::get('admin/motivasi', [DashboardController::class, 'motivasiIndex'])->name('admin.motivasi.index');
+    Route::post('admin/motivasi', [DashboardController::class, 'storeMotivasi'])->name('admin.motivasi.store');
+    Route::delete('admin/motivasi/{index}', [DashboardController::class, 'deleteMotivasi'])->name('admin.motivasi.destroy');
 });
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::controller(DashboardController::class)
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            // master data
             Route::controller(UsersController::class)
                 ->prefix('users')
                 ->name('users.')
@@ -126,5 +130,6 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::post('/dashboard/motivasi', [DashboardController::class, 'updateMotivasi'])->middleware(['auth', 'role:admin|superadmin'])->name('admin.motivasi.update');
 
 require __DIR__ . '/auth.php';

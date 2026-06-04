@@ -116,7 +116,7 @@ graph TD
 
 ---
 
-### FASE 6: Peningkatan UI & Revisi Kuis Lama
+### FASE 6: Peningkatan UI & Revisi Kuis Lama [SELESAI]
 
 #### 1. Tampilkan Jawaban Benar & Navigasi Bagan Soal
 * **File:** [quizplay.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/livewire/quizplay.blade.php) & [Quizplay.php](file:///C:/laragon/www/terjemah_gambar/app/Http/Livewire/Quizplay.php)

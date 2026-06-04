@@ -1,4 +1,24 @@
 <div>
+    <!-- Grid Navigasi Soal -->
+    <div class="card mb-4 shadow-sm border-0 bg-light">
+        <div class="card-body p-3">
+            <h6 class="card-title mb-2"><i class="ti ti-layout-grid"></i> Navigasi Soal</h6>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach($questions as $idx => $q)
+                    @php
+                        $isAnswered = isset($answers[$q->id]) || ($type == 'matching' && isset($matches[$q->id]));
+                        $isActive = $idx == ($index - 1);
+                    @endphp
+                    <button wire:click="goToQuestion({{ $idx }})" 
+                            class="btn {{ $isActive ? 'btn-primary' : ($isAnswered ? 'btn-success' : 'btn-outline-secondary') }} btn-sm fw-bold"
+                            style="width: 40px; height: 40px; border-radius: 8px;">
+                        {{ $idx + 1 }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
     <h3>{{ $quiz->title }} - {{ ucwords(str_replace('_', ' ', $type)) }}</h3>
     <div class="d-flex justify-content-between align-items-center">
 
@@ -43,8 +63,19 @@
                         @endforeach
                     </div>
                 @elseif($question->question_type == 'fill_blank')
-                    <input type="text" wire:model="answers.{{ $question->id }}" class="form-control"
+                    <input type="text" wire:model.live="answers.{{ $question->id }}" class="form-control"
                         placeholder="Jawaban Anda">
+                @endif
+                
+                <!-- Feedback Validation -->
+                @if(isset($results[$question->id]))
+                    <div class="mt-3 alert {{ $results[$question->id]['is_correct'] ? 'alert-success' : 'alert-danger' }}">
+                        @if($results[$question->id]['is_correct'])
+                            <h6 class="mb-0 text-success"><i class="ti ti-check text-success"></i> Jawaban Anda Benar!</h6>
+                        @else
+                            <h6 class="mb-0 text-danger"><i class="ti ti-x text-danger"></i> Jawaban Anda Salah. Jawaban yang benar adalah: <br><strong>{{ $results[$question->id]['correct_text'] }}</strong></h6>
+                        @endif
+                    </div>
                 @endif
             </div>
         @else

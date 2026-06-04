@@ -197,8 +197,8 @@ class WordScrambleController extends Controller
         }
 
         $request->validate([
-            'background_music' => 'nullable|mimes:mp3,wav|max:10240',
-            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'background_music' => 'nullable|file|max:10240',
+            'background_image' => 'nullable|image|max:5120',
             'timer_duration' => 'required|integer|min:10',
             'min_score_to_unlock_intermediate' => 'required|integer|min:0',
             'min_score_to_unlock_advanced' => 'required|integer|min:0',

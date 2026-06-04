@@ -20,6 +20,7 @@ class Quizplay extends Component
     public $currentIndex = 0;
     public $currentQuestion;
     public $answers = [];
+    public $results = [];
     public $attempt;
 
     // untuk matching
@@ -106,9 +107,51 @@ class Quizplay extends Component
         }
     }
 
+    public function goToQuestion($index)
+    {
+        if (isset($this->questions[$index])) {
+            $this->currentIndex = $index;
+            $this->currentQuestion = $this->questions[$this->currentIndex];
+        }
+    }
+
+    public function updatedAnswers($value, $name)
+    {
+        $questionId = $name;
+        $answer = $value;
+        $this->checkAnswer($questionId, $answer);
+    }
+
+    public function checkAnswer($questionId, $answer)
+    {
+        $question = $this->questions->where('id', $questionId)->first();
+        if ($question) {
+            if ($question->question_type == 'multiple_choice' || $question->question_type == 'true_false') {
+                $isCorrect = $question->options->where('id', $answer)->where('is_correct', 1)->isNotEmpty();
+                $correctOption = $question->options->where('is_correct', 1)->first();
+                $this->results[$questionId] = [
+                    'is_correct' => $isCorrect,
+                    'correct_text' => $correctOption ? $correctOption->option_text : ''
+                ];
+            } elseif ($question->question_type == 'fill_blank') {
+                $correctOption = $question->options->first();
+                if ($correctOption) {
+                    $correct = strtolower(trim($correctOption->option_text));
+                    $userAnswer = strtolower(trim($answer));
+                    $isCorrect = $userAnswer === $correct;
+                    $this->results[$questionId] = [
+                        'is_correct' => $isCorrect,
+                        'correct_text' => $correctOption->option_text
+                    ];
+                }
+            }
+        }
+    }
+
     public function saveAnswer($questionId, $answer)
     {
         $this->answers[$questionId] = $answer;
+        $this->checkAnswer($questionId, $answer);
     }
 
     public function submit()
@@ -203,7 +246,7 @@ class Quizplay extends Component
         }
 
 
-        return redirect()->route('participant.quiz.result', $this->attemptId);
+        return redirect()->route('participant.quiz.result', $this->quiz->id);
     }
 
     public function render()

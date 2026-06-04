@@ -4,11 +4,13 @@
     $admin = $auth->hasRole('admin');
     $user = $auth->hasRole('user');
 
+    $dashboardLink = $user ? 'participant.user.dashboard' : 'dashboard';
+
     $sidebarNavs = [
         'Home',
         [
             'name' => 'Dashboard',
-            'link' => 'participant.user.dashboard',
+            'link' => $dashboardLink,
             'icon' => 'ti ti-layout-dashboard',
         ],
     ];
@@ -61,6 +63,11 @@
                 'name' => 'Setting Scramble',
                 'link' => 'scramble-settings.edit',
                 'icon' => 'ti ti-settings',
+            ],
+            [
+                'name' => 'Kelola Motivasi',
+                'link' => 'admin.motivasi.index',
+                'icon' => 'ti ti-message',
             ],
         ]);
     }

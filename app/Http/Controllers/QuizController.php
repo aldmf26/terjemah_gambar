@@ -298,11 +298,25 @@ class QuizController extends Controller
             ->limit(10)
             ->get();
 
+        // Scramble stats
+        $scrambleStats = DB::table('scramble_attempts')
+            ->selectRaw('
+                COUNT(id) as total_main,
+                SUM(score) as total_poin
+            ')
+            ->where('user_id', $userId)
+            ->first();
+            
+        $scrambleMain = $scrambleStats->total_main ?? 0;
+        $scramblePoin = $scrambleStats->total_poin ?? 0;
+
         return view('participant.dashboard_user', compact(
             'totalQuiz',
             'quizSelesai',
             'totalPoin',
-            'ranking'
+            'ranking',
+            'scrambleMain',
+            'scramblePoin'
         ));
     }
 

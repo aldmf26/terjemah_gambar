@@ -34,10 +34,10 @@
 - [x] Buat tampilan view `scramble-play.blade.php` dengan desain glassmorphism modern.
 
 ## Fase 6: Peningkatan UI & Revisi Kuis Lama
-- [ ] Tambahkan bagan grid nomor kuis yang interaktif di [quizplay.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/livewire/quizplay.blade.php).
-- [ ] Implementasikan tampilan jawaban yang benar secara langsung saat user salah menjawab.
-- [ ] Tambahkan kata-kata motivasi estetik di [dashboard_user.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/participant/dashboard_user.blade.php) beserta pembenahan visual leaderboard.
-- [ ] Percantik riwayat nilai peserta kuis agar lebih informatif.
+- [x] Tambahkan bagan grid nomor kuis yang interaktif di [quizplay.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/livewire/quizplay.blade.php).
+- [x] Implementasikan tampilan jawaban yang benar secara langsung saat user salah menjawab.
+- [x] Tambahkan kata-kata motivasi estetik di [dashboard_user.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/participant/dashboard_user.blade.php) beserta pembenahan visual leaderboard.
+- [x] Percantik riwayat nilai peserta kuis agar lebih informatif.
 
 ## Fase 7: Uji Coba & Demo
 - [ ] Verifikasi keseluruhan fungsi game Word Scramble.
