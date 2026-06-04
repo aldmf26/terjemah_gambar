@@ -13,25 +13,25 @@
 - [ ] Integrasikan notifikasi pada homepage [welcome.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/welcome.blade.php) menggunakan overlay ikon & javascript auto-hide 5 detik.
 
 ## Fase 3: Database & Model Game Word Scramble
-- [ ] Buat migrasi tabel `scramble_words` untuk kata, deskripsi pop-up, dan level.
-- [ ] Buat migrasi tabel `scramble_settings` untuk background wetland, backsound musik, timer, dan unlock target.
-- [ ] Buat migrasi tabel `scramble_attempts` untuk melacak skor kuis scramble.
-- [ ] Jalankan perintah `php artisan migrate` untuk mengaplikasikan migrasi baru.
-- [ ] Buat model-model Laravel terkait: `ScrambleWord`, `ScrambleSetting`, dan `ScrambleAttempt`.
+- [x] Buat migrasi tabel `scramble_words` untuk kata, deskripsi pop-up, dan level.
+- [x] Buat migrasi tabel `scramble_settings` untuk background wetland, backsound musik, timer, dan unlock target.
+- [x] Buat migrasi tabel `scramble_attempts` untuk melacak skor kuis scramble.
+- [x] Jalankan perintah `php artisan migrate` untuk mengaplikasikan migrasi baru.
+- [x] Buat model-model Laravel terkait: `ScrambleWord`, `ScrambleSetting`, dan `ScrambleAttempt`.
 
 ## Fase 4: Pengelolaan Admin Word Scramble
-- [ ] Buat controller `ScrambleController.php` untuk CRUD kata, setting, dan upload media.
-- [ ] Daftarkan rute admin scramble di [web.php](file:///C:/laragon/www/terjemah_gambar/routes/web.php).
-- [ ] Buat tampilan web admin untuk kelola kata & upload musik/background.
+- [x] Buat controller `ScrambleController.php` untuk CRUD kata, setting, dan upload media.
+- [x] Daftarkan rute admin scramble di [web.php](file:///C:/laragon/www/terjemah_gambar/routes/web.php).
+- [x] Buat tampilan web admin untuk kelola kata & upload musik/background.
 
 ## Fase 5: Modul Game Word Scramble (Livewire)
-- [ ] Buat komponen Livewire `ScramblePlay.php` untuk memuat engine game.
-- [ ] Implementasikan fungsi pengacakan kata (scrambling) dan validasi input.
-- [ ] Implementasikan alur bermain 3 mode (vs Komputer, vs User, dan Multiplayer).
-- [ ] Tambahkan logika unlock level otomatis berdasarkan data pengerjaan sebelumnya.
-- [ ] Tambahkan pemutaran backsound musik otomatis dan pemuatan background wetland dinamis.
-- [ ] Integrasikan pop-up detail penjelasan kata saat jawaban user benar.
-- [ ] Buat tampilan view `scramble-play.blade.php` dengan desain glassmorphism modern.
+- [x] Buat komponen Livewire `ScramblePlay.php` untuk memuat engine game.
+- [x] Implementasikan fungsi pengacakan kata (scrambling) dan validasi input.
+- [ ] Implementasikan alur bermain 3 mode (vs Komputer, vs User, dan Multiplayer) [DITUNDA].
+- [x] Tambahkan logika unlock level otomatis berdasarkan data pengerjaan sebelumnya.
+- [x] Tambahkan pemutaran backsound musik otomatis dan pemuatan background wetland dinamis.
+- [x] Integrasikan pop-up detail penjelasan kata saat jawaban user benar.
+- [x] Buat tampilan view `scramble-play.blade.php` dengan desain glassmorphism modern.
 
 ## Fase 6: Peningkatan UI & Revisi Kuis Lama
 - [ ] Tambahkan bagan grid nomor kuis yang interaktif di [quizplay.blade.php](file:///C:/laragon/www/terjemah_gambar/resources/views/livewire/quizplay.blade.php).

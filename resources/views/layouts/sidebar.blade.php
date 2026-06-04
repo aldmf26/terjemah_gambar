@@ -21,6 +21,11 @@
                 'icon' => 'ti ti-bookmark',
             ],
             [
+                'name' => 'Word Scramble',
+                'link' => 'participant.scramble.play',
+                'icon' => 'ti ti-device-gamepad-2',
+            ],
+            [
                 'name' => 'Riwayat',
                 'link' => 'participant.riwayat',
                 'icon' => 'ti ti-timeline',
@@ -46,6 +51,16 @@
                 'name' => 'Hari Besar',
                 'link' => 'admin.holiday.index',
                 'icon' => 'ti ti-calendar-event',
+            ],
+            [
+                'name' => 'Word Scramble',
+                'link' => 'scramble-words.index',
+                'icon' => 'ti ti-forms',
+            ],
+            [
+                'name' => 'Setting Scramble',
+                'link' => 'scramble-settings.edit',
+                'icon' => 'ti ti-settings',
             ],
         ]);
     }

@@ -56,4 +56,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(PrintRequest::class, 'request_by');
     }
+
+    /**
+ * Relasi ke data riwayat bermain Word Scramble.
+ */
+public function scrambleAttempts(): \Illuminate\Database\Eloquent\Relations\HasMany
+{
+    return $this->hasMany(ScrambleAttempt::class);
+}
 }

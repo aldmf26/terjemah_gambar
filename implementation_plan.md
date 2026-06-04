@@ -57,83 +57,62 @@ graph TD
 
 ---
 
-### FASE 3: Database & Model Game Word Scramble
+### FASE 3: Database & Model Game Word Scramble [SELESAI]
 
 #### 1. Migrasi Kata & Detail Pop Up
-* **File Baru:** `database/migrations/xxxx_xx_xx_create_scramble_words_table.php`
-* **Skema:**
-  ```php
-  Schema::create('scramble_words', function (Blueprint $table) {
-      $table->id();
-      $table->string('word'); // Kata dasar (misal: "BANANA")
-      $table->text('description'); // Penjelasan pop up detail dikelola admin
-      $table->enum('level', ['beginner', 'intermediate', 'advanced']);
-      $table->timestamps();
-  });
-  ```
+* **File:** [2026_06_04_225556_create_scramble_words_table.php](file:///c:/laragon/www/terjemah_gambar/database/migrations/2026_06_04_225556_create_scramble_words_table.php)
+* **Status:** Selesai migrasi.
 
 #### 2. Migrasi Pengaturan Global (Background & Musik Latar)
-* **File Baru:** `database/migrations/xxxx_xx_xx_create_scramble_settings_table.php`
-* **Skema:**
-  ```php
-  Schema::create('scramble_settings', function (Blueprint $table) {
-      $table->id();
-      $table->string('wetland_bg')->nullable(); // File path gambar lahan basah
-      $table->string('bg_music')->nullable(); // File path musik latar
-      $table->integer('timer_seconds')->default(30); // Batas waktu menjawab kuis
-      $table->integer('unlock_beginner_target')->default(20); // Target jumlah benar untuk lanjut level 2
-      $table->integer('unlock_intermediate_target')->default(20); // Target jumlah benar untuk lanjut level 3
-      $table->timestamps();
-  });
-  ```
+* **File:** [2026_06_04_225822_create_scramble_settings_table.php](file:///c:/laragon/www/terjemah_gambar/database/migrations/2026_06_04_225822_create_scramble_settings_table.php)
+* **Status:** Selesai migrasi.
 
 #### 3. Migrasi Riwayat Permainan (Score & Unlock Player)
-* **File Baru:** `database/migrations/xxxx_xx_xx_create_scramble_attempts_table.php`
-* **Skema:**
-  ```php
-  Schema::create('scramble_attempts', function (Blueprint $table) {
-      $table->id();
-      $table->foreignId('user_id')->constrained()->onDelete('cascade');
-      $table->string('mode'); // vs_computer, vs_user, multiplayer
-      $table->integer('score');
-      $table->integer('correct_count');
-      $table->timestamps();
-  });
-  ```
+* **File:** [2026_06_04_225855_create_scramble_attempts_table.php](file:///c:/laragon/www/terjemah_gambar/database/migrations/2026_06_04_225855_create_scramble_attempts_table.php)
+* **Status:** Selesai migrasi.
+
+#### 4. Model Terkait
+* **Files:** [ScrambleWord.php](file:///c:/laragon/www/terjemah_gambar/app/Models/ScrambleWord.php), [ScrambleSetting.php](file:///c:/laragon/www/terjemah_gambar/app/Models/ScrambleSetting.php), [ScrambleAttempt.php](file:///c:/laragon/www/terjemah_gambar/app/Models/ScrambleAttempt.php).
+* **Status:** Selesai dibuat.
 
 ---
 
-### FASE 4: Pengelolaan Admin untuk Word Scramble
+### FASE 4: Pengelolaan Admin untuk Word Scramble [SEDANG BERJALAN]
 
 #### 1. Controller CRUD Word Scramble
-* **File Baru:** `app/Http/Controllers/Dashboard/ScrambleController.php`
-* **Fitur:**
-  * Tambah/Edit/Hapus kata acak beserta deskripsinya dan tingkat kesulitan.
-  * Halaman upload musik MP3 & gambar background Wetland.
-  * Pengaturan target unlock level & durasi timer per soal.
+* **File:** [WordScrambleController.php](file:///c:/laragon/www/terjemah_gambar/app/Http/Controllers/Game/WordScrambleController.php)
+* **Metode yang Ditambahkan:**
+  * `index(Request $request)`: Menampilkan daftar kata dengan fitur pencarian dan paginasi.
+  * `create()`: Form tambah kata baru.
+  * `store(Request $request)`: Validasi & simpan kata baru, termasuk unggah gambar ilustrasi lahan basah (`illustration_image`).
+  * `edit($id)`: Form edit kata.
+  * `update(Request $request, $id)`: Validasi & perbarui kata, termasuk update/unggah gambar ilustrasi.
+  * `destroy($id)`: Menghapus kata.
+  * `editSettings()`: Menampilkan halaman pengaturan audio, latar belakang wetland, dan target unlock level.
+  * `updateSettings(Request $request)`: Menyimpan/mengubah file background musik (.mp3), background image (lahan basah), timer durasi, dan minimal skor unlock level.
 
-#### 2. View Admin
-* **File Baru:** `resources/views/admin/scramble/index.blade.php` & `resources/views/admin/scramble/settings.blade.php`.
+#### 2. Tampilan View Admin
+* **View Baru:**
+  * `resources/views/admin/scramble/index.blade.php`: Halaman utama daftar kata scramble dengan tabel, pencarian, tombol tambah, edit, hapus.
+  * `resources/views/admin/scramble/create.blade.php` & `resources/views/admin/scramble/edit.blade.php`: Halaman form tambah & edit kata.
+  * `resources/views/admin/scramble/settings.blade.php`: Halaman konfigurasi global permainan (musik, gambar, timer, target unlock).
 
 ---
 
-### FASE 5: Pembuatan Game Word Scramble (Livewire)
+### FASE 5: Pembuatan Game Word Scramble (Livewire) [SEBAGIAN SELESAI]
 
 #### 1. Komponen Livewire Gameplay
-* **File Baru:** `app/Http/Livewire/ScramblePlay.php`
-* **Fungsi Utama:**
-  * **Acak Huruf (Scrambling)**: Fungsi memecah kata dan mengacak posisinya.
-  * **Sistem Level Unlock**: Menghitung progres user di database. Jika total game terselesaikan >= target admin, level berikutnya bisa dipilih (unlock).
-  * **3 Mode Logika**:
-    * **User vs Komputer**: Jika giliran user menjawab salah -> giliran berpindah ke komputer (komputer akan menjawab otomatis dengan tingkat akurasi acak setelah jeda 2 detik).
-    * **User vs User (Lokal Polling/Ganti Giliran)**: Layar menampilkan giliran Pemain 1 / Pemain 2. Jika salah jawab, giliran berpindah pemain.
-    * **Multiplayer (Leaderboard Skor)**: Permainan mandiri yang hasilnya langsung disimpan ke tabel leaderboard global.
-  * **Pop-Up Detail**: Jika jawaban benar, trigger modal pop-up menampilkan isi dari kolom deskripsi kata tersebut.
-  * **Audio & Background**: Audio HTML5 diputar otomatis saat permainan dimulai; gambar latar disetel dari `scramble_settings`.
+* **File Baru:** [ScramblePlay.php](file:///c:/laragon/www/terjemah_gambar/app/Http/Livewire/ScramblePlay.php)
+* **Status Implementasi:**
+  * **Acak Huruf (Scrambling)**: Selesai. Karakter kata diacak secara dinamis jika tidak ditentukan di database.
+  * **Sistem Level Unlock**: Selesai. Total skor pemain divalidasi dengan pengaturan batas minimal unlock dari admin untuk membuka Level 2 & 3.
+  * **Pop-Up Detail**: Selesai. Menampilkan deskripsi ilmiah lengkap beserta gambar ilustrasi lahan basah jika kata berhasil ditebak.
+  * **Audio & Background**: Selesai. Pemuatan background wetland dinamis dan audio musik otomatis sesuai pengaturan admin.
+  * **3 Mode Logika**: [DITUNDA] Ditunda sementara sesuai instruksi user agar pengembangan terfokus pada gameplay inti yang stabil terlebih dahulu.
 
 #### 2. View Game Board
-* **File Baru:** `resources/views/livewire/scramble-play.blade.php`
-* **Visual:** Desain responsif, bergaya glassmorphism transparan di atas background foto wetland, lengkap dengan timer visual yang menyusut.
+* **File Baru:** [scramble-play.blade.php](file:///c:/laragon/www/terjemah_gambar/resources/views/livewire/scramble-play.blade.php)
+* **Visual:** Desain glassmorphic premium responsif, diletakkan di atas background Wetland dinamis dengan visual timer progres menyusut.
 
 ---
 

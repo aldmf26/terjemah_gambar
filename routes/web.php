@@ -4,6 +4,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\HolidayNotificationController;
 use App\Http\Controllers\FineController;
+use App\Http\Controllers\Game\WordScrambleController;
 use App\Http\Controllers\LoansController;
 use App\Http\Controllers\Master\BooksController;
 use App\Http\Controllers\Master\CategoriesController;
@@ -42,6 +43,15 @@ Route::middleware(['auth', 'role:admin|superadmin'])->group(function () {
     Route::resource('quizzes', QuizController::class);
     Route::resource('questions', QuestionController::class);
     Route::patch('quizzes/{quiz}', [QuizController::class, 'updateQuiz'])->name('quizzes.update');
+
+    // Tambahan Route Baru untuk Management Word Scramble Admin
+    Route::resource('scramble-words', WordScrambleController::class);
+    Route::get('scramble-settings', [WordScrambleController::class, 'editSettings'])->name('scramble-settings.edit');
+    Route::put('scramble-settings', [WordScrambleController::class, 'updateSettings'])->name('scramble-settings.update');
+
+
+
+
 
     Route::controller(TerjemahanController::class)
                 ->prefix('admin.terjemahan')
@@ -92,6 +102,9 @@ Route::middleware(['auth', 'role:user'])->prefix('participant')->name('participa
     Route::get('/quiz/{quiz}', [QuizController::class, 'showTypes'])->name('quiz.types');
     Route::get('/quiz/{quiz}/start/{type}', [QuizController::class, 'start'])->name('quiz.start');
     Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+    Route::get('/scramble', function () {
+        return view('participant.scramble');
+    })->name('scramble.play');
 });
 Route::middleware(['auth', 'role:user'])->prefix('participant/riwayat')->name('participant.')->group(function () {
     Route::get('/', [QuizController::class, 'riwayat'])->name('riwayat');
