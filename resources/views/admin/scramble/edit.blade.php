@@ -40,6 +40,14 @@
                     <!-- Input Fields -->
                     <div class="col-12 col-md-8">
                         <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <label for="question" class="form-label fw-semibold">Pertanyaan <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('question') is-invalid @enderror" 
+                                    id="question" name="question" placeholder="Contoh: lembah ?" value="{{ old('question', $word->question) }}" required>
+                                <div class="invalid-feedback">
+                                    @error('question') {{ $message }} @enderror
+                                </div>
+                            </div>
                             <div class="col-12 col-md-6 mb-3">
                                 <label for="original_word" class="form-label fw-semibold">Kata Asli <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('original_word') is-invalid @enderror" 

@@ -56,6 +56,8 @@ class ScramblePlay extends Component
     public $bgMusic = null;
     public $bgImage = null;
 
+    public $pertanyaan = "";
+
     protected $listeners = ['timerExpired' => 'handleTimeOut'];
 
     public function mount()
@@ -186,6 +188,7 @@ class ScramblePlay extends Component
         $this->wrongAttemptOnWord = false;
 
         // Scramble logic
+        $this->pertanyaan = ucwords(strtolower($this->currentWord['question']));
         $original = strtolower(trim($this->currentWord['original_word']));
         $scrambled = strtolower(trim($this->currentWord['scrambled_word'] ?? ''));
 

@@ -15,5 +15,6 @@ class ScrambleWord extends Model
         'scientific_description',
         'illustration_image',
         'level_tier',
+        'question'
     ];
 }

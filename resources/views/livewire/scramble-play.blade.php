@@ -246,6 +246,7 @@
 
                             {{-- Scrambled Letters --}}
                             <div class="mb-5">
+                                <p class="text-muted small">{{$pertanyaan}}</p>
                                 <div class="d-flex justify-content-center flex-wrap gap-2 mb-3">
                                     @foreach ($scrambledLetters as $letter)
                                         <div class="d-flex align-items-center justify-content-center fw-bold rounded shadow-sm text-uppercase bg-light border"

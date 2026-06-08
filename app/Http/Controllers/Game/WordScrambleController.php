@@ -89,6 +89,7 @@ class WordScrambleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'question' => 'required|string|max:255',
             'original_word' => 'required|string|max:255',
             'scrambled_word' => 'required|string|max:255',
             'scientific_description' => 'required|string',
@@ -104,6 +105,7 @@ class WordScrambleController extends Controller
         }
 
         ScrambleWord::create([
+            'question' => strtolower($request->question),
             'original_word' => strtolower($request->original_word),
             'scrambled_word' => strtolower($request->scrambled_word),
             'scientific_description' => $request->scientific_description,
@@ -134,6 +136,7 @@ class WordScrambleController extends Controller
         $word = ScrambleWord::findOrFail($id);
 
         $request->validate([
+            'question' => 'required|string|max:255',
             'original_word' => 'required|string|max:255',
             'scrambled_word' => 'required|string|max:255',
             'scientific_description' => 'required|string',
@@ -149,6 +152,7 @@ class WordScrambleController extends Controller
         }
 
         $word->update([
+            'question' => strtolower($request->question),
             'original_word' => strtolower($request->original_word),
             'scrambled_word' => strtolower($request->scrambled_word),
             'scientific_description' => $request->scientific_description,

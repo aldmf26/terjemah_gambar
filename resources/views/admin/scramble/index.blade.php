@@ -36,6 +36,7 @@
                         <tr>
                             <th scope="col" style="width: 60px;">No</th>
                             <th scope="col" style="width: 120px;">Ilustrasi</th>
+                            <th scope="col">Pertanyaan</th>
                             <th scope="col">Kata Asli</th>
                             <th scope="col">Kata Acak</th>
                             <th scope="col">Level</th>
@@ -64,6 +65,7 @@
                                             <span class="badge bg-light text-muted border py-2 px-3">No Image</span>
                                         @endif
                                     </td>
+                                    <td><strong class="text-success text-uppercase">{{ $word->question }}</strong></td>
                                     <td><strong class="text-success text-uppercase">{{ $word->original_word }}</strong></td>
                                     <td><span class="text-warning fw-semibold text-uppercase">{{ $word->scrambled_word }}</span></td>
                                     <td>
